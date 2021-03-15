@@ -7,13 +7,45 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <TextView
+    <ImageView
+            android:layout_width="555dp"
+            android:layout_height="872dp"
+            android:src="@drawable/leaves"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/pozaFrunze"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.0"/>
+    <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:src="@drawable/GroupTitle"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCamera"
+            app:layout_constraintTop_toTopOf="@+id/pozaFrunze"
+            app:layout_constraintEnd_toEndOf="@+id/pozaFrunze"
+            app:layout_constraintStart_toStartOf="@+id/pozaFrunze"
+            app:layout_constraintVertical_bias="0.177"
+            android:id="@+id/textKodama" app:layout_constraintHorizontal_bias="0.496"/>
+    <ImageButton
+            android:background="null"
+            android:id="@+id/buttonCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/GroupCamera"
+            app:layout_constraintTop_toBottomOf="@+id/textKodama"
+            app:layout_constraintEnd_toEndOf="@+id/pozaFrunze"
+            app:layout_constraintStart_toStartOf="@+id/pozaFrunze"
+            app:layout_constraintBottom_toTopOf="butt"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonPicture"
+            android:src="@drawable/GroupFoto"
+            android:background="null"
+            app:layout_constraintTop_toBottomOf="@+id/buttonCamera"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
