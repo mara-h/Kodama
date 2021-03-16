@@ -6,44 +6,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
-        android:background="@drawable/leaves"
->
-
-    <ImageView
-            android:layout_width="350dp"
-            android:layout_height="231dp"
-            android:src="@drawable/GroupTitle"
-            app:layout_constraintBottom_toTopOf="@+id/buttonCamera"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/textKodama"/>
-    <ImageButton
-            android:background="null"
-            android:id="@+id/buttonCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:src="@drawable/GroupCamera"
-            app:layout_constraintTop_toBottomOf="@+id/textKodama"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/buttonPicture"/>
-    <ImageButton
-            android:layout_width="184dp"
-            android:layout_height="153dp"
-            android:id="@+id/buttonPicture"
-            android:src="@drawable/GroupFoto"
-            android:background="null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/buttonPicture"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+        android:background="@drawable/padure">
     <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/HomeButton"
             android:background="null"
-            android:id="@+id/homeButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/historyButton"
@@ -75,9 +43,46 @@
             android:src="@drawable/AboutUsButton"
             android:id="@+id/aboutUsButton"
             android:background="null"
+            app:layout_constraintStart_toEndOf="@+id/helpButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/HomeButton"
+            android:background="null"
+            android:id="@+id/homeButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/historyButton"
+            app:layout_constraintTop_toTopOf="@+id/historyButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/HistoryButton"
+            android:background="null"
+            app:layout_constraintStart_toEndOf="@+id/homeButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/helpButton"
+            app:layout_constraintTop_toTopOf="@+id/helpButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/HelpButton"
+            android:background="null"
+            app:layout_constraintStart_toEndOf="@+id/historyButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/aboutUsButton"
+            app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/AboutUsButton"
+            android:background="null" tools:layout_editor_absoluteY="639dp"
             app:layout_constraintStart_toEndOf="@+id/helpButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
