@@ -84,5 +84,22 @@
             app:layout_constraintStart_toEndOf="@+id/helpButton" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:layout_width="329dp"
+            android:layout_height="165dp"
+            android:src="@drawable/MyPlants"
+            android:id="@+id/myplants"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="1dp"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search"
+            android:background="null"
+            app:layout_constraintStart_toEndOf="@id/myplants"
+            app:layout_constraintTop_toTopOf="@+id/myplants"
+            app:layout_constraintBottom_toBottomOf="@+id/myplants" app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
