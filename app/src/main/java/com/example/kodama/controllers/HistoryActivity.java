@@ -12,6 +12,9 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.history);
+
         ImageButton historyButton = (ImageButton) findViewById(R.id.historyButton);
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
@@ -44,7 +47,5 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.history);
     }
 }

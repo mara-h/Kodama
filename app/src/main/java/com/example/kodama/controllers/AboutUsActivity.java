@@ -1,17 +1,20 @@
 package com.example.kodama.controllers;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.example.kodama.R;
 
 public class AboutUsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.about_us);
 
         ImageButton historyButton = (ImageButton) findViewById(R.id.historyButton);
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
@@ -46,7 +49,5 @@ public class AboutUsActivity extends AppCompatActivity {
             }
         });
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about_us);
     }
 }
