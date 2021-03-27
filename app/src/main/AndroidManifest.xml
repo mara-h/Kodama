@@ -25,8 +25,7 @@
         </activity>
 
         <activity android:name=".controllers.AboutUsActivity">
-        </activity>
-
+      </activity>
     </application>
 
 </manifest>
