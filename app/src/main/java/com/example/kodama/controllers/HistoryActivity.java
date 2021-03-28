@@ -1,10 +1,11 @@
 package com.example.kodama.controllers;
 
+
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.example.kodama.R;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -46,11 +47,5 @@ public class HistoryActivity extends AppCompatActivity {
                 startActivity(new Intent(HistoryActivity.this, AboutUsActivity.class));
             }
         });
-
-
     }
-
-
-
-
 }

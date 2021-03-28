@@ -41,13 +41,11 @@ public class HelpActivity extends AppCompatActivity {
                 startActivity(new Intent(HelpActivity.this, HelpActivity.class));
             }
         });
-
         aboutUsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HelpActivity.this, AboutUsActivity.class));
             }
         });
-
     }
 }
