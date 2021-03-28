@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".controllers.HistoryActivity"
+        android:background="@drawable/padure">
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/homebutton"
+            android:background="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/historyButton"
+            app:layout_constraintTop_toTopOf="@+id/historyButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/historybutton"
+            android:id="@+id/historyButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/homeButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/helpButton"
+            app:layout_constraintTop_toTopOf="@+id/helpButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/helpbutton"
+            android:id="@+id/helpButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/historyButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/aboutUsButton"
+            app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/aboutusbutton"
+            android:id="@+id/aboutUsButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/helpButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/homebutton"
+            android:background="@null"
+            android:id="@+id/homeButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/historyButton"
+            app:layout_constraintTop_toTopOf="@+id/historyButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/historybutton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/homeButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/helpButton"
+            app:layout_constraintTop_toTopOf="@+id/helpButton"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/helpbutton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/historyButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/aboutUsButton"
+            app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/aboutusbutton"
+            android:background="@null" tools:layout_editor_absoluteY="639dp"
+            app:layout_constraintStart_toEndOf="@+id/helpButton" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:layout_width="329dp"
+            android:layout_height="165dp"
+            android:src="@drawable/myplants"
+            android:id="@+id/myplants"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="1dp"/>
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@id/myplants"
+            app:layout_constraintTop_toTopOf="@+id/myplants"
+            app:layout_constraintBottom_toBottomOf="@+id/myplants" app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
