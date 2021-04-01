@@ -2,7 +2,9 @@ package com.example.kodama.controllers;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,6 +14,9 @@ import com.example.kodama.R;
 public class HomeActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST = 1888;
+    private static final int PICK_IMAGE = 100;
+    Uri imageUri;
+
     ImageView imageView;
 
     @Override
@@ -25,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
         ImageButton cameraButton = (ImageButton) findViewById(R.id.buttonCamera);
+        ImageButton galleryButton = (ImageButton) findViewById(R.id.buttonPicture);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +61,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
         cameraButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -65,13 +70,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
     }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+        }
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(photo);
         }
-    }
 
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+        }
+
+    }
 }
