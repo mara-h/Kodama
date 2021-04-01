@@ -10,6 +10,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.kodama.R;
+import com.example.kodama.exceptions.CameraException;
+import com.example.kodama.exceptions.GalleryException;
+
+import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -81,20 +85,28 @@ public class HomeActivity extends AppCompatActivity {
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
-        }
-
+    }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
-        }
+        // super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-        }
+            if (requestCode == CAMERA_REQUEST) {
+                try {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    imageView.setImageBitmap(photo);
 
+                } catch (CameraException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+                try {
+                    imageUri = data.getData();
+                    imageView.setImageURI(imageUri);
+                } catch (GalleryException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 }
