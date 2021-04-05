@@ -8,12 +8,12 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.kodama.R;
 import com.example.kodama.exceptions.CameraException;
 import com.example.kodama.exceptions.GalleryException;
-
-import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -110,3 +110,4 @@ public class HomeActivity extends AppCompatActivity {
             }
     }
 }
+
