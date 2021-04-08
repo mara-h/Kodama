@@ -1,5 +1,6 @@
 package com.example.kodama.controllers;
 
-public class CameraController {
+import androidx.fragment.app.Fragment;
 
+public class CameraController extends Fragment  {
 }
