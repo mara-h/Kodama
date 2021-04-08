@@ -1,4 +1,4 @@
-package com.example.kodama.controllers;
+package com.example.kodama.view;
 
 import android.content.Intent;
 import android.view.View;
