@@ -1,20 +1,20 @@
-package com.example.kodama.controllers;
+package com.example.kodama.view;
+
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import com.example.kodama.R;
 
-public class HelpActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.help);
+        setContentView(R.layout.history);
 
         ImageButton historyButton = (ImageButton) findViewById(R.id.historyButton);
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
@@ -24,27 +24,27 @@ public class HelpActivity extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HelpActivity.this, HomeActivity.class));
+                startActivity(new Intent(HistoryActivity.this, HomeActivity.class));
             }
         });
 
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HelpActivity.this, HistoryActivity.class));
+                startActivity(new Intent(HistoryActivity.this, HistoryActivity.class));
             }
         });
 
         helpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HelpActivity.this, HelpActivity.class));
+                startActivity(new Intent(HistoryActivity.this, HelpActivity.class));
             }
         });
         aboutUsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HelpActivity.this, AboutUsActivity.class));
+                startActivity(new Intent(HistoryActivity.this, AboutUsActivity.class));
             }
         });
     }
