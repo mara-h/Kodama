@@ -11,20 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controllers.HomeActivity">
+        <activity android:name=".view.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".controllers.HelpActivity">
+        <activity android:name=".view.HelpActivity">
 
         </activity>
-        <activity android:name=".controllers.HistoryActivity">
+        <activity android:name=".view.HistoryActivity">
         </activity>
 
-        <activity android:name=".controllers.AboutUsActivity">
+        <activity android:name=".view.AboutUsActivity">
       </activity>
     </application>
 
