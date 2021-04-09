@@ -66,11 +66,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                startActivity(new Intent(HomeActivity.this, CameraActivity.class));
             }
         });
 
@@ -91,23 +89,24 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // super.onActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == CAMERA_REQUEST) {
-                try {
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    imageView.setImageBitmap(photo);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST) {
+            try {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                imageView.setImageBitmap(photo);
 
-                } catch (CameraException e) {
-                    e.printStackTrace();
-                }
+            } catch (CameraException e) {
+                e.printStackTrace();
             }
-            if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-                try {
-                    imageUri = data.getData();
-                    imageView.setImageURI(imageUri);
-                } catch (GalleryException e) {
-                    e.printStackTrace();
-                }
+        }
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            try {
+                imageUri = data.getData();
+                imageView.setImageURI(imageUri);
+            } catch (GalleryException e) {
+                e.printStackTrace();
             }
+        }
     }
 }
 
