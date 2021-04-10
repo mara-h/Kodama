@@ -75,9 +75,10 @@ public class HomeActivity extends AppCompatActivity {
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openGallery();
+               openGallery();
             }
         });
+
     }
 
     private void openGallery() {

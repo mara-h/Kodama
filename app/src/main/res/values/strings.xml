@@ -7,4 +7,10 @@
     <string name="modelLabel">Model</string>
     <string name="take_picture">Take picture</string>
     <string name="deviceLabel">Device</string>
+
+    <string-array name="models">
+        <item>Float</item>
+        <item>Quantized</item>
+    </string-array>
+
 </resources>

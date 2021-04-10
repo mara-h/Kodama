@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="view.RecognitionActivity">
+
+    <TextView
+        android:id="@+id/classifytext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/image"
+        android:layout_centerHorizontal="true"
+        android:text="Click below to select a Image"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="260dp">
+
+    </TextView>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="335dp"
+        android:layout_height="320dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@color/colorAccent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="38dp"
+        tools:layout_editor_absoluteY="128dp"></ImageView>
+
+    <Button
+        android:id="@+id/classify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="50dp"
+        android:background="#fff"
+        android:text="Classify"
+        android:textColor="#000"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="216dp"></Button>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
