@@ -8,7 +8,7 @@ import org.tensorflow.lite.support.model.Model;
 
 import java.io.IOException;
 
-public class ClassifierFloatMobileNet  extends Classifier{
+public class ClassifierFloatMobileNet  extends Classifier {
     private static final float IMAGE_MEAN = 127.5f;
 
     private static final float IMAGE_STD = 127.5f;
@@ -17,19 +17,25 @@ public class ClassifierFloatMobileNet  extends Classifier{
 
     private static final float PROBABILITY_STD = 1.0f;
 
-    public ClassifierFloatMobileNet (Activity activity, Model.Device device, int numeThreads) throws IOException {
-        super(activity, device, numeThreads);
+    public ClassifierFloatMobileNet(Activity activity, Device device, int numThreads) throws IOException {
+        super(activity, device, numThreads);
     }
 
     protected String getModelPath() {
         return "model.tflite";
     }
 
-    protected String getLablePath() {
-        return "labels.txt";
+    @Override
+    protected String getLabelPath() {
+        return "dict.txt";
     }
 
-    protected TensorOperator getPreprocessNormalizedOp() {
+    @Override
+    protected TensorOperator getPreprocessNormalizeOp() {
         return new NormalizeOp(IMAGE_MEAN, IMAGE_STD);
+    }
+
+    protected TensorOperator getPostprocessNormalizeOp() {
+        return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
     }
 }
