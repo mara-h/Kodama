@@ -29,11 +29,14 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.kodama.R;
@@ -52,11 +55,14 @@ import java.util.List;
 
 import static java.util.Collections.min;
 
+@RequiresApi(api = Build.VERSION_CODES.R)
 public class CameraActivity extends AppCompatActivity {
 
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    int screenHeight = displayMetrics.heightPixels;
-    int screenWidth = displayMetrics.widthPixels;
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private int screenWidth;
+    private int screenHeight;
+
+
 
     private TextureView mTextureView;
     private static final int REQUEST_CAMERA_PERMISSION_RESULT = 0;
@@ -158,6 +164,12 @@ public class CameraActivity extends AppCompatActivity {
                 mediaStoreUpdateIntent.setData(Uri.fromFile(new File(mImageFileName)));
                 sendBroadcast(mediaStoreUpdateIntent);
 
+                Intent viewPictureIntent = new Intent(CameraActivity.this, RetakePhotoActivity.class);
+                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
+
+
+
+
                 if(fileOutputStream != null){
                     try {
                         fileOutputStream.close();
@@ -165,6 +177,7 @@ public class CameraActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+                startActivity(viewPictureIntent);
             }
 
         }
@@ -205,10 +218,10 @@ public class CameraActivity extends AppCompatActivity {
 
     private static SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 0);
-        ORIENTATIONS.append(Surface.ROTATION_90, 90);
-        ORIENTATIONS.append(Surface.ROTATION_180, 180);
-        ORIENTATIONS.append(Surface.ROTATION_270, 270);
+        ORIENTATIONS.append(Surface.ROTATION_0, 90);
+        ORIENTATIONS.append(Surface.ROTATION_90, 0);
+        ORIENTATIONS.append(Surface.ROTATION_180, 270);
+        ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
 
@@ -227,14 +240,48 @@ public class CameraActivity extends AppCompatActivity {
         createImageFolder();
 
         mCapturePhotoButton = (Button) findViewById(R.id.btn_takepicture);
+
         mCapturePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lockFocus();
             }
         });
+        mCapturePhotoButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION_RESULT); //MY_CAMERA_PERMISSION_CODE
+                }
+                else
+                {
+                    lockFocus();
+                }
+            }
+        });
 
         mTextureView = (TextureView) findViewById(R.id.texture);
+
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int deviceHeight = displayMetrics.heightPixels;
+        this.screenWidth = deviceWidth;
+        this.screenHeight = deviceHeight;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            mCapturePhotoButton.setEnabled(false);
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }
+
+
+
+
     }
 
     @Override
@@ -250,7 +297,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
 
-    public void onRequestCameraPermissionResult(int requestCode, String[] permissions, int[] grantResult){
+    public void onRequestCameraPermissionResult(int requestCode, String[] permissions, int[] grantResult){ // unde folosim asta?
         super.onRequestPermissionsResult(requestCode,permissions,grantResult);
         if(requestCode == REQUEST_CAMERA_PERMISSION_RESULT){
             if(grantResult[0] != PackageManager.PERMISSION_GRANTED){
@@ -298,17 +345,13 @@ public class CameraActivity extends AppCompatActivity {
 
                 int deviceOrientation = getWindowManager().getDefaultDisplay().getRotation();
                 mTotalRotation = sensorToDeviceRotation(cameraCharacteristics,deviceOrientation);
-                boolean swapRotation = mTotalRotation == 90 || mTotalRotation == 270;
+
+
                 int maxRotatedWidth = screenWidth;
                 int maxRotatedHeight = screenHeight;
                 int rotatedWidth = width;
                 int rotatedHeight = height;
-                if(swapRotation){
-                    rotatedWidth = height;
-                    rotatedHeight = width;
-                    maxRotatedWidth = screenWidth;
-                    maxRotatedHeight = screenWidth;
-                }
+
 
                 if (maxRotatedWidth > MAX_PREVIEW_WIDTH) {
                     maxRotatedWidth = MAX_PREVIEW_WIDTH;
@@ -393,7 +436,8 @@ public class CameraActivity extends AppCompatActivity {
         try {
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             mCaptureRequestBuilder.addTarget(mImageReader.getSurface());
-            mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION,mTotalRotation);
+                mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION,mTotalRotation);
+
 
 
             CameraCaptureSession.CaptureCallback stillCaptureCallback = new CameraCaptureSession.CaptureCallback() {
@@ -536,4 +580,6 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 }
