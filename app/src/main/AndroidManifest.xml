@@ -27,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".view.HelpActivity" />
         <activity android:name=".view.HistoryActivity" />
         <activity android:name=".view.AboutUsActivity" />
@@ -34,6 +35,7 @@
             android:screenOrientation="nosensor"/>
         <activity android:name=".view.RetakePhotoActivity"/>
         <activity android:name=".view.RecognitionActivity"/>
+
     </application>
 
 </manifest>

@@ -8,9 +8,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.kodama.R;
 import com.example.kodama.exceptions.CameraException;
 import com.example.kodama.exceptions.GalleryException;
@@ -69,10 +67,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, CameraActivity.class));
+
             }
         });
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
+
             /*@Override
             public void onClick(View view) {
                openGallery();
@@ -82,14 +82,12 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         });
-
     }
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // super.onActivityResult(requestCode, resultCode, data);
@@ -126,4 +124,3 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 }
-

@@ -6,9 +6,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.kodama.R;
 
 public class HelpActivity extends AppCompatActivity {

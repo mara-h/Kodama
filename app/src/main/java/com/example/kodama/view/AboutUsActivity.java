@@ -24,8 +24,6 @@ public class AboutUsActivity extends AppCompatActivity {
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
 
-
-
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
