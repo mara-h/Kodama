@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +31,7 @@ import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
@@ -59,6 +61,8 @@ public class RecognitionActivity  extends AppCompatActivity {
     Button buclassify;
     TextView classitext;
 
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recognition);
@@ -67,6 +71,10 @@ public class RecognitionActivity  extends AppCompatActivity {
         imageView=(ImageView)findViewById(R.id.image);
         buclassify=(Button)findViewById(R.id.classify);
         classitext=(TextView)findViewById(R.id.classifytext);
+        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+        ImageView myImageView = new ImageView(null);
+        myImageView.setImageBitmap(bitmap);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +183,4 @@ public class RecognitionActivity  extends AppCompatActivity {
             }
         }
     }
-
-
 }

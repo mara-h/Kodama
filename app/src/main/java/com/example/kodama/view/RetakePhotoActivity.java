@@ -34,6 +34,13 @@ public class RetakePhotoActivity extends Activity {
             }
         });
 
+        useButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent viewPictureIntent = new Intent(RetakePhotoActivity.this, RecognitionActivity.class);
+                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  imageFile);
+            }
+        });
+
         imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
     }
 
