@@ -4,4 +4,5 @@ package com.example.kodama.models;
 //maybe si AI-ul
 
 public class EmptyModel {
+
 }

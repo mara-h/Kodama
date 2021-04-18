@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" package="com.example.kodama">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-<uses-feature android:name="android.hardware.camera"
-    android:required="true"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.kodama">
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera2.full" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,20 +22,20 @@
         android:theme="@style/AppTheme">
         <activity android:name=".view.HomeActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.HelpActivity">
+        <activity android:name=".view.HelpActivity" />
+        <activity android:name=".view.HistoryActivity" />
+        <activity android:name=".view.AboutUsActivity" />
+        <activity android:name=".view.CameraActivity"
+            android:screenOrientation="nosensor"/>
+        <activity android:name=".view.RetakePhotoActivity"/>
+        <activity android:name=".view.RecognitionActivity"/>
 
-        </activity>
-        <activity android:name=".view.HistoryActivity">
-        </activity>
-
-        <activity android:name=".view.AboutUsActivity">
-      </activity>
     </application>
 
 </manifest>
