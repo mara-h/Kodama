@@ -298,17 +298,13 @@ public class CameraActivity extends AppCompatActivity {
 
                 int deviceOrientation = getWindowManager().getDefaultDisplay().getRotation();
                 mTotalRotation = sensorToDeviceRotation(cameraCharacteristics,deviceOrientation);
-                boolean swapRotation = mTotalRotation == 90 || mTotalRotation == 270;
+
+
                 int maxRotatedWidth = screenWidth;
                 int maxRotatedHeight = screenHeight;
                 int rotatedWidth = width;
                 int rotatedHeight = height;
-                if(swapRotation){
-                    rotatedWidth = height;
-                    rotatedHeight = width;
-                    maxRotatedWidth = screenWidth;
-                    maxRotatedHeight = screenWidth;
-                }
+
 
                 if (maxRotatedWidth > MAX_PREVIEW_WIDTH) {
                     maxRotatedWidth = MAX_PREVIEW_WIDTH;
@@ -318,8 +314,8 @@ public class CameraActivity extends AppCompatActivity {
                     maxRotatedHeight = MAX_PREVIEW_HEIGHT;
                 }
 
-                mPreviewSize = choosePreviewOptimalSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight, maxRotatedWidth, maxRotatedHeight, largest);
-
+                //mPreviewSize = choosePreviewOptimalSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight, maxRotatedWidth, maxRotatedHeight, largest);
+                mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight);
 
 
                 mImageSize = chooseOptimalSize(map.getOutputSizes(ImageFormat.JPEG),rotatedWidth,rotatedHeight);
@@ -461,55 +457,32 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-
-
-    /**
-     * Given {@code choices} of {@code Size}s supported by a camera, choose the smallest one that
-     * is at least as large as the respective texture view size, and that is at most as large as the
-     * respective max size, and whose aspect ratio matches with the specified value. If such size
-     * doesn't exist, choose the largest one that is at most as large as the respective max size,
-     * and whose aspect ratio matches with the specified value.
-     *
-     * @param choices           The list of sizes that the camera supports for the intended output
-     *                          class
-     * @param textureViewWidth  The width of the texture view relative to sensor coordinate
-     * @param textureViewHeight The height of the texture view relative to sensor coordinate
-     * @param maxWidth          The maximum width that can be chosen
-     * @param maxHeight         The maximum height that can be chosen
-     * @param aspectRatio       The aspect ratio
-     * @return The optimal {@code Size}, or an arbitrary one if none were big enough
-     */
-    private Size choosePreviewOptimalSize(Size[] choices, int textureViewWidth,
-                                          int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
-
-        // Collect the supported resolutions that are at least as big as the preview Surface
-        List<Size> bigEnough = new ArrayList<>();
-        // Collect the supported resolutions that are smaller than the preview Surface
-        List<Size> notBigEnough = new ArrayList<>();
-        int w = aspectRatio.getWidth();
-        int h = aspectRatio.getHeight();
-        for (Size option : choices) {
-            if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight &&
-                    option.getHeight() == option.getWidth() * h / w) {
-                if (option.getWidth() >= textureViewWidth &&
-                        option.getHeight() >= textureViewHeight) {
-                    bigEnough.add(option);
-                } else {
-                    notBigEnough.add(option);
+    private Size getPreferredPreviewSize(Size[] mapSizes, int width, int height) {
+        List<Size> collectorSizes = new ArrayList<>();
+        for(Size option : mapSizes) {
+            if(width > height) {
+                if(option.getWidth() > width &&
+                        option.getHeight() > height) {
+                    collectorSizes.add(option);
+                }
+            } else {
+                if(option.getWidth() > height &&
+                        option.getHeight() > width) {
+                    collectorSizes.add(option);
                 }
             }
         }
-
-        if (bigEnough.size() > 0) {
-            return Collections.min(bigEnough, new CompareSizeByArea());
-        } else if (notBigEnough.size() > 0) {
-            return Collections.max(notBigEnough, new CompareSizeByArea());
-        } else {
-            Toast.makeText(getApplicationContext(),"default to first camera ratio", Toast.LENGTH_SHORT).show();
-            return choices[0];
-
+        if(collectorSizes.size() > 0) {
+            return Collections.min(collectorSizes, new Comparator<Size>() {
+                @Override
+                public int compare(Size lhs, Size rhs) {
+                    return Long.signum(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight());
+                }
+            });
         }
+        return mapSizes[0];
     }
+
 
     private void createImageFolder(){
         File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
