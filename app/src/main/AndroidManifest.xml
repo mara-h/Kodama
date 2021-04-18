@@ -33,6 +33,7 @@
         <activity android:name=".view.CameraActivity"
             android:screenOrientation="nosensor"/>
         <activity android:name=".view.RetakePhotoActivity"/>
+        <activity android:name=".view.RecognitionActivity"/>
     </application>
 
 </manifest>

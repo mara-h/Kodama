@@ -1,5 +1,7 @@
 package com.example.kodama.view;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -12,9 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.example.kodama.R;
 
@@ -28,10 +28,10 @@ import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
+import org.tensorflow.lite.support.image.ops.Rot90Op;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
@@ -40,41 +40,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class RecognitionActivity  extends AppCompatActivity {
+public class RecognitionActivity extends AppCompatActivity {
 
     protected Interpreter tflite;
     private MappedByteBuffer tfliteModel;
     private TensorImage inputImageBuffer;
     private  int imageSizeX;
     private  int imageSizeY;
-    private TensorBuffer outputProbabilityBuffer;
-    private TensorProcessor probabilityProcessor;
+    private  TensorBuffer outputProbabilityBuffer;
+    private  TensorProcessor probabilityProcessor;
     private static final float IMAGE_MEAN = 0.0f;
     private static final float IMAGE_STD = 1.0f;
     private static final float PROBABILITY_MEAN = 0.0f;
     private static final float PROBABILITY_STD = 255.0f;
     private Bitmap bitmap;
     private List<String> labels;
-   //??????????
     ImageView imageView;
     Uri imageuri;
     Button buclassify;
     TextView classitext;
 
-    private static final String IMAGE_FILE_LOCATION = "image_file_location";
-
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recognition);
-        //chestii butoane sau altele din xml
-
         imageView=(ImageView)findViewById(R.id.image);
         buclassify=(Button)findViewById(R.id.classify);
         classitext=(TextView)findViewById(R.id.classifytext);
-        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
-        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-        ImageView myImageView = new ImageView(null);
-        myImageView.setImageBitmap(bitmap);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +79,7 @@ public class RecognitionActivity  extends AppCompatActivity {
         });
 
         try{
-            tflite = new Interpreter(loadModelFile(RecognitionActivity.this));
+            tflite=new Interpreter(loadmodelfile(this));
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,7 +87,7 @@ public class RecognitionActivity  extends AppCompatActivity {
         buclassify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //get the shape of the model
                 int imageTensorIndex = 0;
                 int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}
                 imageSizeY = imageShape[1];
@@ -114,9 +106,12 @@ public class RecognitionActivity  extends AppCompatActivity {
                 inputImageBuffer = loadImage(bitmap);
 
                 tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
-                showResult();
+                showresult();
             }
         });
+
+
+
     }
 
     private TensorImage loadImage(final Bitmap bitmap) {
@@ -125,6 +120,7 @@ public class RecognitionActivity  extends AppCompatActivity {
 
         // Creates processor for the TensorImage.
         int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
+        //process image and resize it with required size
         // TODO(b/143564309): Fuse ops inside ImageProcessor.
         ImageProcessor imageProcessor =
                 new ImageProcessor.Builder()
@@ -135,8 +131,9 @@ public class RecognitionActivity  extends AppCompatActivity {
         return imageProcessor.process(inputImageBuffer);
     }
 
-    private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
-        AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("newmodel.tflite");
+
+    private MappedByteBuffer loadmodelfile(Activity activity) throws IOException {
+        AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("model.tflite");
         FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel=inputStream.getChannel();
         long startoffset = fileDescriptor.getStartOffset();
@@ -151,10 +148,10 @@ public class RecognitionActivity  extends AppCompatActivity {
         return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
     }
 
-    private void showResult(){
+    private void showresult(){
 
         try{
-            labels = FileUtil.loadLabels(this,"newdict.txt");
+            labels = FileUtil.loadLabels(this,"dict.txt");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -168,8 +165,10 @@ public class RecognitionActivity  extends AppCompatActivity {
                 classitext.setText(entry.getKey());
             }
         }
+        tflite.close();
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

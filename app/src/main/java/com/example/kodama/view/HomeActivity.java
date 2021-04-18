@@ -73,10 +73,14 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
+            /*@Override
             public void onClick(View view) {
                openGallery();
+            }*/
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, RecognitionActivity.class));
             }
+
         });
 
     }
