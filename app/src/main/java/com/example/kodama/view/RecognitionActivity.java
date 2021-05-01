@@ -1,7 +1,9 @@
 package com.example.kodama.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -10,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kodama.R;
+import com.example.kodama.controllers.PlantsController;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -31,6 +41,7 @@ import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
 import org.tensorflow.lite.support.image.ops.Rot90Op;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+import org.w3c.dom.CDATASection;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,10 +56,10 @@ public class RecognitionActivity extends AppCompatActivity {
     protected Interpreter tflite;
     private MappedByteBuffer tfliteModel;
     private TensorImage inputImageBuffer;
-    private  int imageSizeX;
-    private  int imageSizeY;
-    private  TensorBuffer outputProbabilityBuffer;
-    private  TensorProcessor probabilityProcessor;
+    private int imageSizeX;
+    private int imageSizeY;
+    private TensorBuffer outputProbabilityBuffer;
+    private TensorProcessor probabilityProcessor;
     private static final float IMAGE_MEAN = 0.0f;
     private static final float IMAGE_STD = 1.0f;
     private static final float PROBABILITY_MEAN = 0.0f;
@@ -60,27 +71,35 @@ public class RecognitionActivity extends AppCompatActivity {
     Button buclassify;
     TextView classitext;
 
+    PlantsController plantInfo;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recognition);
-        imageView=(ImageView)findViewById(R.id.image);
-        buclassify=(Button)findViewById(R.id.classify);
-        classitext=(TextView)findViewById(R.id.classifytext);
+        imageView = (ImageView) findViewById(R.id.image);
+        buclassify = (Button) findViewById(R.id.classify);
+        classitext = (TextView) findViewById(R.id.classifytext);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("plantInfo");
+        plantInfo = new PlantsController();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"),12);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 12);
             }
         });
 
-        try{
-            tflite=new Interpreter(loadmodelfile(this));
-        }catch (Exception e) {
+        try {
+            tflite = new Interpreter(loadmodelfile(this));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -105,11 +124,10 @@ public class RecognitionActivity extends AppCompatActivity {
 
                 inputImageBuffer = loadImage(bitmap);
 
-                tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
+                tflite.run(inputImageBuffer.getBuffer(), outputProbabilityBuffer.getBuffer().rewind());
                 showresult();
             }
         });
-
 
 
     }
@@ -133,35 +151,36 @@ public class RecognitionActivity extends AppCompatActivity {
 
 
     private MappedByteBuffer loadmodelfile(Activity activity) throws IOException {
-        AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("model.tflite");
-        FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
-        FileChannel fileChannel=inputStream.getChannel();
+        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd("model.tflite");
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
         long startoffset = fileDescriptor.getStartOffset();
-        long declaredLength=fileDescriptor.getDeclaredLength();
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY,startoffset,declaredLength);
+        long declaredLength = fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength);
     }
 
     private TensorOperator getPreprocessNormalizeOp() {
         return new NormalizeOp(IMAGE_MEAN, IMAGE_STD);
     }
-    private TensorOperator getPostprocessNormalizeOp(){
+
+    private TensorOperator getPostprocessNormalizeOp() {
         return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
     }
 
-    private void showresult(){
+    private void showresult() {
 
-        try{
-            labels = FileUtil.loadLabels(this,"dict.txt");
-        }catch (Exception e){
+        try {
+            labels = FileUtil.loadLabels(this, "dict.txt");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Map<String, Float> labeledProbability =
                 new TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer))
                         .getMapWithFloatValue();
-        float maxValueInMap =(Collections.max(labeledProbability.values()));
+        float maxValueInMap = (Collections.max(labeledProbability.values()));
 
         for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
-            if (entry.getValue()==maxValueInMap) {
+            if (entry.getValue() == maxValueInMap) {
                 classitext.setText(entry.getKey());
             }
         }
@@ -172,7 +191,7 @@ public class RecognitionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==12 && resultCode==RESULT_OK && data!=null) {
+        if (requestCode == 12 && resultCode == RESULT_OK && data != null) {
             imageuri = data.getData();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);
@@ -182,4 +201,27 @@ public class RecognitionActivity extends AppCompatActivity {
             }
         }
     }
+
+    //sendDataButton? cum transformam classify button in ala
+
+       private void addDataToFireBase(String name) {
+        plantInfo.setPlantName(name);
+        //altele daca mai e nevoie
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                databaseReference.setValue(plantInfo);
+                //after adding this data we are showing toast message
+                Toast.makeText(RecognitionActivity.this, "data added", Toast.LENGTH_SHORT).show();
+
+            }
+
+            public void onCancelled(@NonNull DatabaseError error) {
+                //if the data is not added or it is cancelled then we are displaying a failure toast message
+            Toast.makeText(RecognitionActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

@@ -13,6 +13,7 @@ import com.example.kodama.R;
 import java.io.File;
 
 public class RetakePhotoActivity extends Activity {
+
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
 
     protected void onCreate(Bundle savedInstanceState) {

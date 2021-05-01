@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "682131643193",
+    "firebase_url": "https://kodama-7fb15-default-rtdb.firebaseio.com",
+    "project_id": "kodama-7fb15",
+    "storage_bucket": "kodama-7fb15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682131643193:android:c57834220f8d1ec9eaa6e8",
+        "android_client_info": {
+          "package_name": "com.example.kodama"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682131643193-fm84ka1o7r9q1dk7n2r29kgtmdiv0u5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-tDhRJm4fzophVbVH0RuKDiYDscYjhTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682131643193-fm84ka1o7r9q1dk7n2r29kgtmdiv0u5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
