@@ -15,9 +15,9 @@ import com.example.kodama.exceptions.GalleryException;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final int CAMERA_REQUEST = 1888;
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
 
     ImageView imageView;
 
@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
         ImageButton cameraButton = (ImageButton) findViewById(R.id.buttonCamera);
         ImageButton galleryButton = (ImageButton) findViewById(R.id.buttonPicture);
+       // ImageView imageView = (ImageView) findViewById(R.id.pictureViewHome);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,18 +72,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        galleryButton.setOnClickListener(new View.OnClickListener() {
-//
-//            /*@Override
-//            public void onClick(View view) {
-//               openGallery();
-//            }*/
-//            public void onClick(View v) {
-//                startActivity(new Intent(HomeActivity.this, RecognitionActivity.class));
-//            }
-//
-//        });
-
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +79,9 @@ public class HomeActivity extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 12);
+                //Intent viewPictureIntent = new Intent(HomeActivity.this, RetakePhotoActivity.class);
+                //viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
+
             }
         });
     }
@@ -100,26 +92,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // super.onActivityResult(requestCode, resultCode, data);
-
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST) {
-            try {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(photo);
-
-            } catch (CameraException e) {
-                e.printStackTrace();
-            }
-        }
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
             try {
                 imageUri = data.getData();
-                imageView.setImageURI(imageUri);
+               // imageView.setImageURI(imageUri);
+                Intent viewPictureIntent = new Intent(HomeActivity.this, RetakePhotoActivity.class);
+                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  imageUri.toString());// ??
+                startActivity(viewPictureIntent);
+
+
             } catch (GalleryException e) {
                 e.printStackTrace();
             }
-        }
     }
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);

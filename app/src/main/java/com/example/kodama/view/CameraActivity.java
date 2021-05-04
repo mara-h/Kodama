@@ -168,8 +168,6 @@ public class CameraActivity extends AppCompatActivity {
                 viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
 
 
-
-
                 if(fileOutputStream != null){
                     try {
                         fileOutputStream.close();
