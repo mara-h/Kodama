@@ -71,16 +71,26 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+//        galleryButton.setOnClickListener(new View.OnClickListener() {
+//
+//            /*@Override
+//            public void onClick(View view) {
+//               openGallery();
+//            }*/
+//            public void onClick(View v) {
+//                startActivity(new Intent(HomeActivity.this, RecognitionActivity.class));
+//            }
+//
+//        });
+
         galleryButton.setOnClickListener(new View.OnClickListener() {
-
-            /*@Override
-            public void onClick(View view) {
-               openGallery();
-            }*/
+            @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, RecognitionActivity.class));
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 12);
             }
-
         });
     }
 

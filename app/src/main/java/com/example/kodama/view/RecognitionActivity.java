@@ -1,6 +1,5 @@
 package com.example.kodama.view;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,25 +7,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kodama.R;
-import com.example.kodama.controllers.PlantsController;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.kodama.controllers.RecognitionController;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -38,10 +28,8 @@ import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
-import org.tensorflow.lite.support.image.ops.Rot90Op;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-import org.w3c.dom.CDATASection;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,10 +42,8 @@ import java.util.Map;
 public class RecognitionActivity extends AppCompatActivity {
 
     protected Interpreter tflite;
-    private MappedByteBuffer tfliteModel;
+   // private MappedByteBuffer tfliteModel;
     private TensorImage inputImageBuffer;
-    private int imageSizeX;
-    private int imageSizeY;
     private TensorBuffer outputProbabilityBuffer;
     private TensorProcessor probabilityProcessor;
     private static final float IMAGE_MEAN = 0.0f;
@@ -70,10 +56,9 @@ public class RecognitionActivity extends AppCompatActivity {
     Uri imageuri;
     Button buclassify;
     TextView classitext;
+    private RecognitionController recognitionController;
 
-    PlantsController plantInfo;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +68,6 @@ public class RecognitionActivity extends AppCompatActivity {
         buclassify = (Button) findViewById(R.id.classify);
         classitext = (TextView) findViewById(R.id.classifytext);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("plantInfo");
-        plantInfo = new PlantsController();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +80,7 @@ public class RecognitionActivity extends AppCompatActivity {
         });
 
         try {
-            tflite = new Interpreter(loadmodelfile(this));
+            tflite = new Interpreter(recognitionController.loadModelFile(this));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,8 +91,8 @@ public class RecognitionActivity extends AppCompatActivity {
                 //get the shape of the model
                 int imageTensorIndex = 0;
                 int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}
-                imageSizeY = imageShape[1];
-                imageSizeX = imageShape[2];
+                recognitionController.setImageSizeY(imageShape[1]);
+                recognitionController.setImageSizeX(imageShape[2]);
                 DataType imageDataType = tflite.getInputTensor(imageTensorIndex).dataType();
 
                 int probabilityTensorIndex = 0;
@@ -119,55 +101,17 @@ public class RecognitionActivity extends AppCompatActivity {
                 DataType probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType();
 
                 inputImageBuffer = new TensorImage(imageDataType);
+                recognitionController.setInputImageBuffer(inputImageBuffer);
                 outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType);
-                probabilityProcessor = new TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build();
-
-                inputImageBuffer = loadImage(bitmap);
-
+                probabilityProcessor = new TensorProcessor.Builder().add(recognitionController.getPostprocessNormalizeOp()).build();
+                inputImageBuffer = recognitionController.loadImage(bitmap);
                 tflite.run(inputImageBuffer.getBuffer(), outputProbabilityBuffer.getBuffer().rewind());
-                showresult();
+                showResult();
             }
         });
-
-
     }
 
-    private TensorImage loadImage(final Bitmap bitmap) {
-        // Loads bitmap into a TensorImage.
-        inputImageBuffer.load(bitmap);
-
-        // Creates processor for the TensorImage.
-        int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
-        //process image and resize it with required size
-        // TODO(b/143564309): Fuse ops inside ImageProcessor.
-        ImageProcessor imageProcessor =
-                new ImageProcessor.Builder()
-                        .add(new ResizeWithCropOrPadOp(cropSize, cropSize))
-                        .add(new ResizeOp(imageSizeX, imageSizeY, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-                        .add(getPreprocessNormalizeOp())
-                        .build();
-        return imageProcessor.process(inputImageBuffer);
-    }
-
-
-    private MappedByteBuffer loadmodelfile(Activity activity) throws IOException {
-        AssetFileDescriptor fileDescriptor = activity.getAssets().openFd("model.tflite");
-        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
-        FileChannel fileChannel = inputStream.getChannel();
-        long startoffset = fileDescriptor.getStartOffset();
-        long declaredLength = fileDescriptor.getDeclaredLength();
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength);
-    }
-
-    private TensorOperator getPreprocessNormalizeOp() {
-        return new NormalizeOp(IMAGE_MEAN, IMAGE_STD);
-    }
-
-    private TensorOperator getPostprocessNormalizeOp() {
-        return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
-    }
-
-    private void showresult() {
+    private void showResult() {
 
         try {
             labels = FileUtil.loadLabels(this, "dict.txt");
@@ -201,27 +145,5 @@ public class RecognitionActivity extends AppCompatActivity {
             }
         }
     }
-
-    //sendDataButton? cum transformam classify button in ala
-
-       private void addDataToFireBase(String name) {
-        plantInfo.setPlantName(name);
-        //altele daca mai e nevoie
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                databaseReference.setValue(plantInfo);
-                //after adding this data we are showing toast message
-                Toast.makeText(RecognitionActivity.this, "data added", Toast.LENGTH_SHORT).show();
-
-            }
-
-            public void onCancelled(@NonNull DatabaseError error) {
-                //if the data is not added or it is cancelled then we are displaying a failure toast message
-            Toast.makeText(RecognitionActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    
 }
