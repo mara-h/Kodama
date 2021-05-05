@@ -3,22 +3,19 @@ package com.example.kodama.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import com.example.kodama.R;
-import com.example.kodama.controllers.RecognitionController;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -36,20 +33,18 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static android.net.Uri.fromFile;
-
 
 public class RetakePhotoActivity extends Activity {
 
+    private static int RESULT_LOAD_IMAGE = 1;
+    private String picturePath;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
-    private RecognitionController recognitionController;
     protected Interpreter tflite;
     private TensorImage inputImageBuffer;
     private TensorBuffer outputProbabilityBuffer;
@@ -61,10 +56,11 @@ public class RetakePhotoActivity extends Activity {
     private Bitmap bitmap;
     private List<String> labels;
     private Uri imageuri;
-    private TextView classitext;
     private ImageView imageView;
     private  int imageSizeX;
     private  int imageSizeY;
+
+    TextView classitext;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +68,10 @@ public class RetakePhotoActivity extends Activity {
         ImageButton retakeButton = (ImageButton) findViewById(R.id.btn_retakepicture);
         ImageButton useButton = (ImageButton) findViewById(R.id.btn_usepicture);
         ImageButton rechooseButton = (ImageButton) findViewById(R.id.btn_rechoose);
-        TextView classitext = (TextView) findViewById(R.id.classifytext) ;
+        classitext=(TextView)findViewById(R.id.classifytext);
 
-        ImageView imageView = findViewById(R.id.pictureViewRetake); //!!!!!!!!!!!!!!!!!!!!!!
-        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
+        imageView = findViewById(R.id.pictureViewRetake); //!!!!!!!!!!!!!!!!!!!!!!
+
 
         retakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,23 +80,24 @@ public class RetakePhotoActivity extends Activity {
             }
         });
 
-        rechooseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 12);
-            }
-        });
-       // imageView.setImageURI(null);
-        //Uri uri = Uri.fromFile(imageFile);
+        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
 
-      //  imageView.setImageURI(uri);
+        imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
         bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
-       imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
+        rechooseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"app after rechoose btn", Toast.LENGTH_SHORT).show();
 
+                Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                Toast.makeText(getApplicationContext(),"app after start activity", Toast.LENGTH_SHORT).show();
+
+             //   imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath)); // asa merge dar intarziat
+               // bitmap = BitmapFactory.decodeFile(picturePath);
+            }
+        });
 
         try{
             tflite=new Interpreter(loadmodelfile(this));
@@ -136,71 +133,8 @@ public class RetakePhotoActivity extends Activity {
 
 
 
-//        try {
-//            tflite = new Interpreter(recognitionController.loadModelFile(this));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
-//        useButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //get the shape of the model
-//                int imageTensorIndex = 0;
-//                int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}
-//                recognitionController.setImageSizeY(imageShape[1]);
-//                recognitionController.setImageSizeX(imageShape[2]);
-//                DataType imageDataType = tflite.getInputTensor(imageTensorIndex).dataType();
-//
-//                int probabilityTensorIndex = 0;
-//                int[] probabilityShape = tflite.getOutputTensor(probabilityTensorIndex).shape(); // {1, NUM_CLASSES}
-//                DataType probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType();
-//
-//                inputImageBuffer = new TensorImage(imageDataType);
-//                recognitionController.setInputImageBuffer(inputImageBuffer);
-//                outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType);
-//                probabilityProcessor = new TensorProcessor.Builder().add(recognitionController.getPostprocessNormalizeOp()).build();
-//                inputImageBuffer = recognitionController.loadImage(bitmap);
-//                tflite.run(inputImageBuffer.getBuffer(), outputProbabilityBuffer.getBuffer().rewind());
-//                showResult();
-//            }
-//        });
     }
-//
-//   private void showResult() {
-//
-//       try {
-//           labels = FileUtil.loadLabels(this, "dict.txt");
-//       } catch (Exception e) {
-//           e.printStackTrace();
-//       }
-//       Map<String, Float> labeledProbability =
-//               new TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer))
-//                       .getMapWithFloatValue();
-//       float maxValueInMap = (Collections.max(labeledProbability.values()));
-//
-//       for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
-//           if (entry.getValue() == maxValueInMap) {
-//               classitext.setText(entry.getKey());
-//           }
-//       }
-//       tflite.close();
-//   }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == 12 && resultCode == RESULT_OK && data != null) {
-//            imageuri = data.getData();
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);
-//                imageView.setImageBitmap(bitmap); //
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 
     private TensorImage loadImage(final Bitmap bitmap) {
@@ -254,26 +188,29 @@ public class RetakePhotoActivity extends Activity {
                 classitext.setText(entry.getKey());
             }
         }
-        Toast.makeText(getApplicationContext(),"cacat pe bat", Toast.LENGTH_LONG).show();
 
-        if(classitext == null) {
-            Toast.makeText(getApplicationContext(),"app won't run with null classitext", Toast.LENGTH_LONG).show();
-        }
         tflite.close();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            picturePath = cursor.getString(columnIndex);
+            cursor.close();
 
-        if(requestCode==12 && resultCode==RESULT_OK && data!=null) {
-            imageuri = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Intent intent = new Intent(RetakePhotoActivity.this, RetakePhotoActivity.class);
+            intent.putExtra(IMAGE_FILE_LOCATION, picturePath);
+            startActivity(intent);
+
+            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath)); asa crapa
+           // bitmap = BitmapFactory.decodeFile(picturePath);
         }
     }
 

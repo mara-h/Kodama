@@ -17,7 +17,6 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -160,9 +159,9 @@ public class CameraActivity extends AppCompatActivity {
             } finally {
                 mImage.close();
 
-                Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                mediaStoreUpdateIntent.setData(Uri.fromFile(new File(mImageFileName)));
-                sendBroadcast(mediaStoreUpdateIntent);
+              //  Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+             //   mediaStoreUpdateIntent.setData(Uri.fromFile(new File(mImageFileName)));
+               // sendBroadcast(mediaStoreUpdateIntent);
 
                 Intent viewPictureIntent = new Intent(CameraActivity.this, RetakePhotoActivity.class);
                 viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
@@ -194,8 +193,6 @@ public class CameraActivity extends AppCompatActivity {
                     mCaptureState = STATE_PREVIEW;
                     Integer afState = captureResult.get(CaptureResult.CONTROL_AF_STATE);
                     if(afState == CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED || afState == CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED ){
-                        //toast do something auto focus locked
-                        //aici se salveaza poza
                         startStillCaptureRequest();
                     }
                     break;

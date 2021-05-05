@@ -1,23 +1,25 @@
 package com.example.kodama.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.kodama.R;
-import com.example.kodama.exceptions.CameraException;
-import com.example.kodama.exceptions.GalleryException;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
+    private static int RESULT_LOAD_IMAGE = 1;
     Uri imageUri;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private String mImageFileName;
 
     ImageView imageView;
 
@@ -75,35 +77,29 @@ public class HomeActivity extends AppCompatActivity {
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 12);
-                //Intent viewPictureIntent = new Intent(HomeActivity.this, RetakePhotoActivity.class);
-                //viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
-
+                Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
     }
 
-    private void openGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-            try {
-                imageUri = data.getData();
-               // imageView.setImageURI(imageUri);
-                Intent viewPictureIntent = new Intent(HomeActivity.this, RetakePhotoActivity.class);
-                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  imageUri.toString());// ??
-                startActivity(viewPictureIntent);
-
-
-            } catch (GalleryException e) {
-                e.printStackTrace();
-            }
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            Intent intent = new Intent(HomeActivity.this, RetakePhotoActivity.class);
+            intent.putExtra(IMAGE_FILE_LOCATION, picturePath);
+            startActivity(intent);
+        }
     }
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
