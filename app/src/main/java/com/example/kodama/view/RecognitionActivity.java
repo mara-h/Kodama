@@ -1,7 +1,5 @@
 package com.example.kodama.view;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -14,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.kodama.R;
 
@@ -28,10 +28,10 @@ import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
-import org.tensorflow.lite.support.image.ops.Rot90Op;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
@@ -42,6 +42,7 @@ import java.util.Map;
 
 public class RecognitionActivity extends AppCompatActivity {
 
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
     protected Interpreter tflite;
     private MappedByteBuffer tfliteModel;
     private TensorImage inputImageBuffer;
@@ -67,6 +68,11 @@ public class RecognitionActivity extends AppCompatActivity {
         imageView=(ImageView)findViewById(R.id.image);
         buclassify=(Button)findViewById(R.id.classify);
         classitext=(TextView)findViewById(R.id.classifytext);
+
+        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
+
+        imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
+        bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +101,7 @@ public class RecognitionActivity extends AppCompatActivity {
                 DataType imageDataType = tflite.getInputTensor(imageTensorIndex).dataType();
 
                 int probabilityTensorIndex = 0;
-                int[] probabilityShape =
-                        tflite.getOutputTensor(probabilityTensorIndex).shape(); // {1, NUM_CLASSES}
+                int[] probabilityShape = tflite.getOutputTensor(probabilityTensorIndex).shape(); // {1, NUM_CLASSES}
                 DataType probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType();
 
                 inputImageBuffer = new TensorImage(imageDataType);
@@ -172,7 +177,7 @@ public class RecognitionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==12 && resultCode==RESULT_OK && data!=null) {
+        if (requestCode == 12 && resultCode == RESULT_OK && data != null) {
             imageuri = data.getData();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageuri);

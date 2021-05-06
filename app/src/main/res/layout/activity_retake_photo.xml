@@ -8,35 +8,66 @@
     tools:context=".view.RetakePhotoActivity"
     >
     <ImageView
-        android:id="@+id/pictureView"
+        android:id="@+id/pictureViewRetake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_retakepicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/retake_picture"
+        android:layout_width="80dp"
+        android:layout_height="65dp"
         android:layout_marginBottom="70dp"
-        android:textSize="30dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/cameraretakeicon"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_usepicture"
+        app:layout_constraintEnd_toStartOf="@id/btn_rechoose"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+
+    <ImageButton
+        android:id="@+id/btn_rechoose"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="65dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/imagegalleryicon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_usepicture"
+        app:layout_constraintHorizontal_bias="0.993"
+        app:layout_constraintStart_toEndOf="@id/btn_retakepicture" />
+
+    <ImageButton
         android:id="@+id/btn_usepicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="70dp"
+        android:scaleType="fitXY"
+        android:background="@null"
+        android:src="@drawable/checkmark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="30dp"
-        android:text="@string/use_picture"
-        app:layout_constraintStart_toEndOf="@id/btn_retakepicture" />
+        app:layout_constraintStart_toEndOf="@id/btn_rechoose" />
+
+    <TextView
+        android:id="@+id/classifytext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="MORIIIIII"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
