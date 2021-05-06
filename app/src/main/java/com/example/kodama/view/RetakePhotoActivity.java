@@ -6,6 +6,7 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -60,7 +61,8 @@ public class RetakePhotoActivity extends Activity {
     private  int imageSizeX;
     private  int imageSizeY;
 
-    TextView classitext;
+    private AnimatedVectorDrawable animation;
+    private TextView classitext;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +70,19 @@ public class RetakePhotoActivity extends Activity {
         ImageButton retakeButton = (ImageButton) findViewById(R.id.btn_retakepicture);
         ImageButton useButton = (ImageButton) findViewById(R.id.btn_usepicture);
         ImageButton rechooseButton = (ImageButton) findViewById(R.id.btn_rechoose);
+        ImageButton cancelButton = (ImageButton) findViewById(R.id.btn_x);
+        ImageButton savePhoto = (ImageButton) findViewById(R.id.download_photo_button);
+        ImageButton gotoButton = (ImageButton) findViewById(R.id.goto_button);
         classitext=(TextView)findViewById(R.id.classifytext);
+       // ImageButton useButton = (ImageButton) findViewById(R.id.useAnimated);
+     //   ImageView checkAnimation = (ImageView) findViewById(R.id.useAnimated) ;
+     //   Animatable animatable = (Animatable) checkAnimation.getDrawable();
+       // animatable.start();
 
-        imageView = findViewById(R.id.pictureViewRetake); //!!!!!!!!!!!!!!!!!!!!!!
+        imageView = findViewById(R.id.pictureViewRetake);
+
+        cancelButton.setVisibility(View.GONE);
+        classitext.setVisibility(View.GONE);
 
 
         retakeButton.setOnClickListener(new View.OnClickListener() {
@@ -87,15 +99,11 @@ public class RetakePhotoActivity extends Activity {
 
         rechooseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"app after rechoose btn", Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(
                         Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
-                Toast.makeText(getApplicationContext(),"app after start activity", Toast.LENGTH_SHORT).show();
 
-             //   imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath)); // asa merge dar intarziat
-               // bitmap = BitmapFactory.decodeFile(picturePath);
             }
         });
 
@@ -108,6 +116,7 @@ public class RetakePhotoActivity extends Activity {
         useButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //get the shape of the model
                 int imageTensorIndex = 0;
                 int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}
@@ -128,11 +137,49 @@ public class RetakePhotoActivity extends Activity {
 
                 tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
                 showresult();
+                //Drawable d = useButton.getDrawable();
+                //if (d instanceof AnimatedVectorDrawable) {
+                  //  animation = (AnimatedVectorDrawable) d;
+                //    animation.start();
+               // }
+                useButton.setVisibility(View.GONE);
+                cancelButton.setVisibility((View.VISIBLE));
+                classitext.setVisibility(View.VISIBLE);
             }
         });
 
 
 
+
+
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RetakePhotoActivity.this, HomeActivity.class));
+            }
+        });
+
+        savePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                  Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                  mediaStoreUpdateIntent.setData(Uri.fromFile(imageFile));
+                  sendBroadcast(mediaStoreUpdateIntent);
+
+                Toast.makeText(getApplicationContext(),"Imagine salvata. trebuie schimbat sa arate altfel+sa se salveze o data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        gotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"nu stiu daca in history sau mai bine catre un google. sau transformam history in baza de date", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RetakePhotoActivity.this, HistoryActivity.class));
+
+            }
+        });
 
     }
 

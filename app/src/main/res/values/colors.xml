@@ -8,4 +8,6 @@
     <color name="selection_highlight">#aaaaaa</color>
     <color name="selection_focus">#eeaa55</color>
     <color name="item_normal">#eeeeee</color>
+    <color name="transparent_dark">#A6262f31</color>
+
 </resources>
