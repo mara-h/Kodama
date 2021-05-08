@@ -5,7 +5,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.kodama.models.Plants;
-import com.example.kodama.view.RecognitionActivity;
+import com.example.kodama.view.RetakePhotoActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +23,7 @@ public class PlantsController {
   //  databaseReference = firebaseDatabase.getReference("plantInfo");
 
 
-    private void addDataToFireBase(String name, RecognitionActivity recognitionActivity) {
+    private void addDataToFireBase(String name, RetakePhotoActivity recognitionActivity) {
         plantInfo.setPlantName(name);
         //altele daca mai e nevoie
 
