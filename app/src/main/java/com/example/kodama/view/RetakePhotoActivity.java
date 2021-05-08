@@ -73,6 +73,9 @@ public class RetakePhotoActivity extends Activity {
         ImageButton cancelButton = (ImageButton) findViewById(R.id.btn_x);
         ImageButton savePhoto = (ImageButton) findViewById(R.id.download_photo_button);
         ImageButton gotoButton = (ImageButton) findViewById(R.id.goto_button);
+        ImageView savedPhoto =  (ImageView) findViewById(R.id.saved_photo_button);
+        ImageButton backButton = (ImageButton) findViewById(R.id.back_button);
+
         classitext=(TextView)findViewById(R.id.classifytext);
        // ImageButton useButton = (ImageButton) findViewById(R.id.useAnimated);
      //   ImageView checkAnimation = (ImageView) findViewById(R.id.useAnimated) ;
@@ -81,6 +84,7 @@ public class RetakePhotoActivity extends Activity {
 
         imageView = findViewById(R.id.pictureViewRetake);
 
+        savedPhoto.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
         classitext.setVisibility(View.GONE);
 
@@ -149,10 +153,6 @@ public class RetakePhotoActivity extends Activity {
         });
 
 
-
-
-
-
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +166,8 @@ public class RetakePhotoActivity extends Activity {
                   Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                   mediaStoreUpdateIntent.setData(Uri.fromFile(imageFile));
                   sendBroadcast(mediaStoreUpdateIntent);
+                  savePhoto.setVisibility(View.GONE);
+                  savedPhoto.setVisibility(View.VISIBLE);
 
                 Toast.makeText(getApplicationContext(),"Imagine salvata. trebuie schimbat sa arate altfel+sa se salveze o data", Toast.LENGTH_SHORT).show();
             }
@@ -178,6 +180,13 @@ public class RetakePhotoActivity extends Activity {
                 Toast.makeText(getApplicationContext(),"nu stiu daca in history sau mai bine catre un google. sau transformam history in baza de date", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(RetakePhotoActivity.this, HistoryActivity.class));
 
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RetakePhotoActivity.this, HomeActivity.class));
             }
         });
 
@@ -255,9 +264,6 @@ public class RetakePhotoActivity extends Activity {
             Intent intent = new Intent(RetakePhotoActivity.this, RetakePhotoActivity.class);
             intent.putExtra(IMAGE_FILE_LOCATION, picturePath);
             startActivity(intent);
-
-            //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath)); asa crapa
-           // bitmap = BitmapFactory.decodeFile(picturePath);
         }
     }
 
