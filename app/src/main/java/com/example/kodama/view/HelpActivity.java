@@ -2,11 +2,11 @@ package com.example.kodama.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.kodama.R;
 
 public class HelpActivity extends AppCompatActivity {
@@ -72,12 +72,6 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        TextView textDetails = (TextView) findViewById(R.id.textDetails);
-        textDetails.setText("Welcome!\n" +
-                "Kodama helps you identify plants easily just by taking photos.\nHere are a few tricks to help you get started:\n" +
-                "- Take centered photos of leafs or flowers\n" + "- Make sure that the plant is in focus\n" + "- Dont't snap plants that are far out of frame\n" +
-                "- Don't have other objects (pot, hands, etc.) \n" + "- Have fun discovering new plants!\n");
-        textDetails.setMovementMethod(new ScrollingMovementMethod());
     }
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);

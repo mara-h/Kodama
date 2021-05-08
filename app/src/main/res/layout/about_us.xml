@@ -8,83 +8,52 @@
         tools:context=".view.HomeActivity"
 
         android:background="@drawable/poza_frunze">
-        <TextView
-            android:id="@+id/aboutUsTextHeading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:text="TextView"
 
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="36sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintBottom_toTopOf="@+id/aboutUsText"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageButton
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/homebutton"
+            android:background="@null"
+            android:id="@+id/homeButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/historyButton"
+            app:layout_constraintTop_toTopOf="@+id/historyButton"/>
+        <ImageButton
+            android:layout_width="37dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/historybutton"
+            android:id="@+id/historyButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/homeButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/helpButton"
+            app:layout_constraintTop_toTopOf="@+id/helpButton"/>
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/helpbutton"
+            android:id="@+id/helpButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/historyButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/aboutUsButton"
+            app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
 
-        <TextView
-            android:id="@+id/aboutUsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elegantTextHeight="true"
-            android:fitsSystemWindows="true"
-            android:scrollbars="vertical"
-
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toTopOf="@id/helpButton"
+        <ImageButton
+            android:layout_width="49dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/aboutusbutton"
+            android:id="@+id/aboutUsButton"
+            android:background="@null"
+            app:layout_constraintStart_toEndOf="@+id/helpButton"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutUsTextHeading"
-            tools:ignore="MissingConstraints" />
-
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/homebutton"
-                android:background="@null"
-                android:id="@+id/homeButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/historyButton"
-                app:layout_constraintTop_toTopOf="@+id/historyButton"/>
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/historybutton"
-                android:id="@+id/historyButton"
-                android:background="@null"
-                app:layout_constraintStart_toEndOf="@+id/homeButton"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/helpButton"
-                app:layout_constraintTop_toTopOf="@+id/helpButton"/>
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/helpbutton"
-                android:id="@+id/helpButton"
-                android:background="@null"
-                app:layout_constraintStart_toEndOf="@+id/historyButton"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/aboutUsButton"
-                app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
-
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/aboutusbutton"
-                android:id="@+id/aboutUsButton"
-                android:background="@null"
-                app:layout_constraintStart_toEndOf="@+id/helpButton"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

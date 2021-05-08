@@ -23,16 +23,19 @@
     <ImageButton
             android:background="@null"
             android:id="@+id/buttonCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
+            android:layout_width="182dp"
+            android:layout_height="90dp"
+        android:paddingBottom="30dp"
+        android:scaleType="fitXY"
             android:src="@drawable/groupcamera"
             app:layout_constraintTop_toBottomOf="@+id/textKodama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/buttonPicture"/>
     <ImageButton
-            android:layout_width="184dp"
-            android:layout_height="153dp"
+        android:layout_width="182dp"
+        android:layout_height="60dp"
+        android:scaleType="fitXY"
             android:id="@+id/buttonPicture"
             android:src="@drawable/groupfoto"
             android:background="@null"
@@ -42,8 +45,9 @@
             app:layout_constraintEnd_toEndOf="parent"
         />
     <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        android:scaleType="fitXY"
             android:src="@drawable/homebutton"
             android:background="@null"
             android:id="@+id/homeButton"
@@ -52,8 +56,9 @@
             app:layout_constraintEnd_toStartOf="@+id/historyButton"
             app:layout_constraintTop_toTopOf="@+id/historyButton"/>
     <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_width="37dp"
+        android:layout_height="50dp"
+        android:scaleType="fitXY"
             android:src="@drawable/historybutton"
             android:id="@+id/historyButton"
             android:background="@null"
@@ -62,8 +67,9 @@
             app:layout_constraintEnd_toStartOf="@+id/helpButton"
             app:layout_constraintTop_toTopOf="@+id/helpButton"/>
     <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="50dp"
+        android:scaleType="fitXY"
             android:src="@drawable/helpbutton"
             android:id="@+id/helpButton"
             android:background="@null"
@@ -73,8 +79,10 @@
             app:layout_constraintTop_toTopOf="@+id/aboutUsButton"/>
 
     <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="50dp"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="10dp"
             android:src="@drawable/aboutusbutton"
             android:id="@+id/aboutUsButton"
             android:background="@null"
