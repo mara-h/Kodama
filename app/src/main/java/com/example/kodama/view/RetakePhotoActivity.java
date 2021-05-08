@@ -10,13 +10,20 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.kodama.R;
+import com.example.kodama.controllers.PlantsController;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -60,6 +67,9 @@ public class RetakePhotoActivity extends Activity {
     private ImageView imageView;
     private  int imageSizeX;
     private  int imageSizeY;
+    private String userId;
+
+    private PlantsController plantsController = new PlantsController();
 
     private AnimatedVectorDrawable animation;
     private TextView classitext;
@@ -139,6 +149,20 @@ public class RetakePhotoActivity extends Activity {
             e.printStackTrace();
         }
 
+        FirebaseInstallations.getInstance().getId()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            userId = task.getResult();
+                            Log.d("Installations", "Installation ID: " + task.getResult());
+                        } else {
+                            userId = "eroare";
+                            Log.e("Installations", "Unable to get Installation ID");
+                        }
+                    }
+                });
+
         useButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,7 +215,7 @@ public class RetakePhotoActivity extends Activity {
                   savePhoto.setVisibility(View.GONE);
                   savedPhoto.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getApplicationContext(),"Imagine salvata. trebuie schimbat sa arate altfel+sa se salveze o data", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -262,12 +286,16 @@ public class RetakePhotoActivity extends Activity {
         float maxValueInMap =(Collections.max(labeledProbability.values()));
 
         for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
-            if (entry.getValue()==maxValueInMap) {
+            if (entry.getValue() == maxValueInMap) {
                 classitext.setText(entry.getKey());
             }
         }
-
         tflite.close();
+        if (userId == "eroare") {
+            Toast.makeText(getApplicationContext(),"Eroare la id firebase", Toast.LENGTH_SHORT).show();
+        } else {
+            plantsController.addUserIdToFireBase(classitext.getText().toString(), userId, RetakePhotoActivity.this);
+        }
     }
 
     @Override
