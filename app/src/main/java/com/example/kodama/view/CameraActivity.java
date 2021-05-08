@@ -30,6 +30,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -257,6 +258,15 @@ public class CameraActivity extends AppCompatActivity {
         createImageFolder();
 
         mCapturePhotoButton = (Button) findViewById(R.id.btn_takepicture);
+        ImageButton backButton = (ImageButton) findViewById(R.id.back_button_camera);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeCamera();
+                startActivity(new Intent(CameraActivity.this, HomeActivity.class));
+            }
+        });
 
         mCapturePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
