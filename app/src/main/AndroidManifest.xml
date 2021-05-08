@@ -20,21 +20,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.HomeActivity">
+        <activity android:name=".view.HomeActivity"
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
-        <activity android:name=".view.HelpActivity" />
-        <activity android:name=".view.HistoryActivity" />
-        <activity android:name=".view.AboutUsActivity" />
+        <activity android:name=".view.HelpActivity"
+            android:screenOrientation="nosensor"/>
+        <activity android:name=".view.HistoryActivity"
+            android:screenOrientation="nosensor"/>
+        <activity android:name=".view.AboutUsActivity"
+            android:screenOrientation="nosensor"/>
         <activity android:name=".view.CameraActivity"
             android:screenOrientation="nosensor"/>
-        <activity android:name=".view.RetakePhotoActivity"/>
-        <activity android:name=".view.RecognitionActivity"/>
+        <activity android:name=".view.RetakePhotoActivity"
+            android:screenOrientation="nosensor"/>
+
 
     </application>
 
