@@ -3,12 +3,21 @@ package com.example.kodama.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.kodama.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.installations.FirebaseInstallations;
 
-public class HistoryActivity extends AppCompatActivity {
+import java.util.UUID;
+
+public class HistoryActivity<id> extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,11 @@ public class HistoryActivity extends AppCompatActivity {
                 startActivity(new Intent(HistoryActivity.this, AboutUsActivity.class));
             }
         });
+
+        Toast.makeText(getApplicationContext(),id, Toast.LENGTH_SHORT).show();
+
+
+
     }
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
@@ -82,4 +96,8 @@ public class HistoryActivity extends AppCompatActivity {
                     |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         }
     }
+
+    String id = UUID.randomUUID().toString();
+
+
 }
