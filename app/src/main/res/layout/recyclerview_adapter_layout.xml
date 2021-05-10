@@ -5,12 +5,16 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    cardView:cardCornerRadius="8dp"
-    cardView:cardElevation="8dp"
-    android:layout_margin="8dp">
+    cardView:cardCornerRadius="10dp"
+    android:layout_margin="8dp"
+    cardView:cardElevation="58dp"
+    cardView:cardBackgroundColor="@color/transparent_dark_lighter"
+    >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@null"
+        >
 
         <ImageView
             android:id="@+id/image"
@@ -22,21 +26,20 @@
             cardView:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
+
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-smallcaps"
             android:gravity="center_vertical"
-            android:layout_margin="8dp"
+            android:layout_marginLeft="10dp"
             cardView:layout_constraintTop_toTopOf="parent"
             cardView:layout_constraintLeft_toRightOf="@id/image"
             cardView:layout_constraintRight_toRightOf="parent"
             cardView:layout_constraintBottom_toBottomOf="parent"
-            android:lines="1"
-            android:padding="5dp"
             android:textStyle="bold"
             tools:text="@tools:sample/full_names"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/primary_light_color" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

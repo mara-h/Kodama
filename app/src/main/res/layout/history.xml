@@ -74,6 +74,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:padding="10dp"
+        android:background="@null"
         app:layout_constraintTop_toBottomOf="@id/myplants"
         app:layout_constraintBottom_toTopOf="@id/homeButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,9 +82,9 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:requiresFadingEdge="vertical"
-        android:fadingEdgeLength="50dp"
+        android:fadingEdgeLength="30dp"
         android:layout_marginBottom="80dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="120dp"
         tools:listitem="@layout/recyclerview_adapter_layout"
         />
 
