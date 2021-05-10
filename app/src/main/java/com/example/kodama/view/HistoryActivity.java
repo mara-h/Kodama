@@ -8,23 +8,22 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kodama.R;
 import com.example.kodama.controllers.ClickListener;
-import com.example.kodama.controllers.RecyclerviewItemAdapter;
-import com.example.kodama.models.PlantCardItem;
+import com.example.kodama.controllers.RecyclerViewAdapter;
+import com.example.kodama.models.PlantCard;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryActivity<id> extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerviewItemAdapter recyclerviewItemAdapter;
-    private List<PlantCardItem> itemsList;
+    private RecyclerViewAdapter recyclerViewAdapter;
+    private List<PlantCard> plantList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +58,11 @@ public class HistoryActivity<id> extends AppCompatActivity {
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
-        itemsList = new ArrayList<>();
-        recyclerView = (RecyclerView)findViewById(R.id.recycleView);
+
+        historyButton.bringToFront();
+        helpButton.bringToFront();
+        aboutUsButton.bringToFront();
+        homeButton.bringToFront();
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,22 +91,23 @@ public class HistoryActivity<id> extends AppCompatActivity {
             }
         });
 
-        recyclerviewItemAdapter = new RecyclerviewItemAdapter(itemsList);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        plantList = new ArrayList<>();
+        prepareMovie();
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recyclerViewAdapter = new RecyclerViewAdapter(plantList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(recyclerviewItemAdapter);
 
-        recyclerviewItemAdapter.setOnItemClickListener(new ClickListener<PlantCardItem>(){
+
+        recyclerViewAdapter.setOnItemClickListener(new ClickListener<PlantCard>(){
             @Override
-            public void onClick(View view, PlantCardItem data, int position) {
-                Toast.makeText(getApplicationContext(),"Position = "+position+"\n Item = "+data.getName(),Toast.LENGTH_SHORT).show();
+            public void onItemClick(PlantCard data) {
+                Toast.makeText(HistoryActivity.this, data.getName(), Toast.LENGTH_SHORT).show();
             }
-
         });
 
-        prepareItems();
+        recyclerView.setAdapter(recyclerViewAdapter);
+
     }
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
@@ -119,12 +122,14 @@ public class HistoryActivity<id> extends AppCompatActivity {
         }
     }
 
-    private void prepareItems(){
-        for(int i = 0; i < 50; i++) {
-            PlantCardItem items = new PlantCardItem("Item"+i);
-            itemsList.add(items);
-        }
-    }
 
+    private void prepareMovie(){
+        PlantCard plant;
+        for(int i = 0; i<30; i++){
+            plant = new PlantCard("planta"+ i, R.drawable.leaves);
+            plantList.add(plant);
+        }
+       // recyclerViewAdapter.notifyDataSetChanged();
+    }
 
 }
