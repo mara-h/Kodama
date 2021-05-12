@@ -26,9 +26,20 @@ public class Plants {
     public String getScientificName() {return scientificName;}
     public String getUserId() {return userId;}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
 }

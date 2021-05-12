@@ -21,9 +21,6 @@ import androidx.annotation.NonNull;
 
 import com.example.kodama.R;
 import com.example.kodama.controllers.PlantsController;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.installations.FirebaseInstallations;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -53,6 +50,7 @@ public class RetakePhotoActivity extends Activity {
     private static int RESULT_LOAD_IMAGE = 1;
     private String picturePath;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String PLANT_NAME = "plant_name";
     protected Interpreter tflite;
     private TensorImage inputImageBuffer;
     private TensorBuffer outputProbabilityBuffer;
@@ -67,7 +65,7 @@ public class RetakePhotoActivity extends Activity {
     private ImageView imageView;
     private  int imageSizeX;
     private  int imageSizeY;
-    private String userId;
+
 
     private PlantsController plantsController = new PlantsController();
 
@@ -149,20 +147,6 @@ public class RetakePhotoActivity extends Activity {
             e.printStackTrace();
         }
 
-        FirebaseInstallations.getInstance().getId()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (task.isSuccessful()) {
-                            userId = task.getResult();
-                            Log.d("Installations", "Installation ID: " + task.getResult());
-                        } else {
-                            userId = "eroare";
-                            Log.e("Installations", "Unable to get Installation ID");
-                        }
-                    }
-                });
-
         useButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,12 +203,12 @@ public class RetakePhotoActivity extends Activity {
             }
         });
 
-
         gotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"nu stiu daca in history sau mai bine catre un google. sau transformam history in baza de date", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(RetakePhotoActivity.this, HistoryActivity.class));
+                Intent sendNameIntent = new Intent(RetakePhotoActivity.this, PlantPageActivity.class);
+                sendNameIntent.putExtra(PLANT_NAME, classitext.getText().toString());
+                startActivity(sendNameIntent);
 
             }
         });
@@ -291,11 +275,6 @@ public class RetakePhotoActivity extends Activity {
             }
         }
         tflite.close();
-        if (userId == "eroare") {
-            Toast.makeText(getApplicationContext(),"Eroare la id firebase", Toast.LENGTH_SHORT).show();
-        } else {
-            plantsController.addUserIdToFireBase(classitext.getText().toString(), userId, RetakePhotoActivity.this);
-        }
     }
 
     @Override

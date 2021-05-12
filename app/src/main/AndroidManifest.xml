@@ -40,6 +40,8 @@
             android:screenOrientation="nosensor"/>
         <activity android:name=".view.RetakePhotoActivity"
             android:screenOrientation="nosensor"/>
+        <activity android:name=".view.PlantPageActivity"
+            android:screenOrientation="nosensor"/>
 
 
     </application>
