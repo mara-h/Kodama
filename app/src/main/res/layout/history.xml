@@ -72,14 +72,20 @@
             app:layout_constraintBottom_toBottomOf="@+id/myplants" app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView"
+        android:id="@+id/recyclerView"
         android:padding="10dp"
+        android:background="@null"
         app:layout_constraintTop_toBottomOf="@id/myplants"
         app:layout_constraintBottom_toTopOf="@id/homeButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="30dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="120dp"
+        tools:listitem="@layout/recyclerview_adapter_layout"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
