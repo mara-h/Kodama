@@ -16,6 +16,12 @@ import com.example.kodama.controllers.ClickListener;
 import com.example.kodama.controllers.RecyclerViewAdapter;
 import com.example.kodama.models.PlantCard;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +98,7 @@ public class HistoryActivity extends AppCompatActivity {
         });
 
         plantList = new ArrayList<>();
-        prepareMovie();
+        preparePlantsList();
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerViewAdapter = new RecyclerViewAdapter(plantList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -123,13 +129,40 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
-    private void prepareMovie(){
+    private void preparePlantsList(){
         PlantCard plant;
-        for(int i = 0; i<30; i++){
-            plant = new PlantCard("planta"+ i, R.drawable.leaves);
-            plantList.add(plant);
+        try {
+            JSONObject object = new JSONObject(readJSON());
+            JSONArray array = object.getJSONArray("Plants");
+            int ij = array.length();
+            int t = array.length();
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonObject = array.getJSONObject(i);
+                String name = jsonObject.getString("Name");
+                plant = new PlantCard(name);
+                plantList.add(plant);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-       // recyclerViewAdapter.notifyDataSetChanged();
     }
 
+    public String readJSON() {
+        String json = null;
+        try {
+            // Opening data.json file
+            InputStream inputStream = getAssets().open("LocalDB.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            // read values in the byte array
+            inputStream.read(buffer);
+            inputStream.close();
+            // convert byte to string
+            json = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return json;
+        }
+        return json;
+    }
 }

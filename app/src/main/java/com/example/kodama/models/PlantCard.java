@@ -5,9 +5,8 @@ public class PlantCard {
     private String title;
     private int image;
 
-    public PlantCard(String title, int image) {
+    public PlantCard(String title) {
         this.title = title;
-        this.image = image;
     }
 
     public String getName() {
