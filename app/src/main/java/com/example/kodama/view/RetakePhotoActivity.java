@@ -61,7 +61,6 @@ public class RetakePhotoActivity extends Activity {
     private static final float PROBABILITY_STD = 255.0f;
     private Bitmap bitmap;
     private List<String> labels;
-    private Uri imageuri;
     private ImageView imageView;
     private  int imageSizeX;
     private  int imageSizeY;
@@ -107,13 +106,10 @@ public class RetakePhotoActivity extends Activity {
         ImageButton backButton = (ImageButton) findViewById(R.id.back_button);
 
         classitext=(TextView)findViewById(R.id.classifytext);
-       // ImageButton useButton = (ImageButton) findViewById(R.id.useAnimated);
-     //   ImageView checkAnimation = (ImageView) findViewById(R.id.useAnimated) ;
-     //   Animatable animatable = (Animatable) checkAnimation.getDrawable();
-       // animatable.start();
 
         imageView = findViewById(R.id.pictureViewRetake);
 
+        gotoButton.setVisibility(View.GONE);
         savedPhoto.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
         classitext.setVisibility(View.GONE);
@@ -171,14 +167,10 @@ public class RetakePhotoActivity extends Activity {
 
                 tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
                 showresult();
-                //Drawable d = useButton.getDrawable();
-                //if (d instanceof AnimatedVectorDrawable) {
-                  //  animation = (AnimatedVectorDrawable) d;
-                //    animation.start();
-               // }
                 useButton.setVisibility(View.GONE);
                 cancelButton.setVisibility((View.VISIBLE));
                 classitext.setVisibility(View.VISIBLE);
+                gotoButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -198,8 +190,6 @@ public class RetakePhotoActivity extends Activity {
                   sendBroadcast(mediaStoreUpdateIntent);
                   savePhoto.setVisibility(View.GONE);
                   savedPhoto.setVisibility(View.VISIBLE);
-
-
             }
         });
 
@@ -209,7 +199,6 @@ public class RetakePhotoActivity extends Activity {
                 Intent sendNameIntent = new Intent(RetakePhotoActivity.this, PlantPageActivity.class);
                 sendNameIntent.putExtra(PLANT_NAME, classitext.getText().toString());
                 startActivity(sendNameIntent);
-
             }
         });
 
@@ -230,7 +219,6 @@ public class RetakePhotoActivity extends Activity {
         // Creates processor for the TensorImage.
         int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
         //process image and resize it with required size
-        // TODO(b/143564309): Fuse ops inside ImageProcessor.
         ImageProcessor imageProcessor =
                 new ImageProcessor.Builder()
                         .add(new ResizeWithCropOrPadOp(cropSize, cropSize))
