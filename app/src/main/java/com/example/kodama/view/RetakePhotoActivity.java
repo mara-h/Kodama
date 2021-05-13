@@ -6,7 +6,6 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +52,7 @@ public class RetakePhotoActivity extends Activity {
     private static int RESULT_LOAD_IMAGE = 1;
     private String picturePath;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String IS_FROM_CAMERA = "is_from_camera";
     private static final String PLANT_NAME = "plant_name";
     protected Interpreter tflite;
     private TensorImage inputImageBuffer;
@@ -72,8 +72,6 @@ public class RetakePhotoActivity extends Activity {
 
 
     private PlantsController plantsController = new PlantsController();
-
-    private AnimatedVectorDrawable animation;
     private TextView classitext;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +127,10 @@ public class RetakePhotoActivity extends Activity {
         });
 
         File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));// aici crapa din cand in cand; zice null pointer exception
-
+        int is_from_camera = getIntent().getIntExtra(IS_FROM_CAMERA, 0);
+        if(is_from_camera == 1){
+            imageView.setRotation((float)90.0);
+        }
         imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
         bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
@@ -303,6 +304,8 @@ public class RetakePhotoActivity extends Activity {
         }
     }
 
+
+
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
         View decorView = getWindow().getDecorView();
@@ -315,5 +318,6 @@ public class RetakePhotoActivity extends Activity {
                     |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         }
     }
+
 
 }

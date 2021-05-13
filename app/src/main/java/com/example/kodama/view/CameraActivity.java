@@ -59,6 +59,7 @@ import static java.util.Collections.min;
 public class CameraActivity extends AppCompatActivity {
 
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String IS_FROM_CAMERA = "is_from_camera";
     private int screenWidth;
     private int screenHeight;
 
@@ -108,8 +109,7 @@ public class CameraActivity extends AppCompatActivity {
         public void onOpened(@NonNull CameraDevice camera) {
             mCameraDevice = camera;
             startPreview();
-            //Toast.makeText(getApplicationContext(),"camera connection made", Toast.LENGTH_SHORT).show();
-        }
+           }
 
         @Override
         public void onDisconnected(@NonNull CameraDevice camera) {
@@ -141,10 +141,13 @@ public class CameraActivity extends AppCompatActivity {
 
     private class ImageSaver implements Runnable{
         private final Image mImage;
-
         private ImageSaver(Image mImage) {
             this.mImage = mImage;
         }
+
+
+        //TODO rotate image here
+
 
         @Override
         public void run() {
@@ -160,12 +163,9 @@ public class CameraActivity extends AppCompatActivity {
             } finally {
                 mImage.close();
 
-              //  Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-             //   mediaStoreUpdateIntent.setData(Uri.fromFile(new File(mImageFileName)));
-               // sendBroadcast(mediaStoreUpdateIntent);
-
                 Intent viewPictureIntent = new Intent(CameraActivity.this, RetakePhotoActivity.class);
-                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);// ??
+                viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);
+                viewPictureIntent.putExtra(IS_FROM_CAMERA, 1);
 
 
                 if(fileOutputStream != null){
@@ -268,12 +268,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        mCapturePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                lockFocus();
-            }
-        });
         mCapturePhotoButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -366,35 +360,18 @@ public class CameraActivity extends AppCompatActivity {
                     continue;
                 }
 
-                Size largest = Collections.max(
-                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-                        new CompareSizeByArea());
 
                 int deviceOrientation = getWindowManager().getDefaultDisplay().getRotation();
                 mTotalRotation = sensorToDeviceRotation(cameraCharacteristics,deviceOrientation);
 
-
-                int maxRotatedWidth = screenWidth;
-                int maxRotatedHeight = screenHeight;
                 int rotatedWidth = width;
                 int rotatedHeight = height;
-
-
-                if (maxRotatedWidth > MAX_PREVIEW_WIDTH) {
-                    maxRotatedWidth = MAX_PREVIEW_WIDTH;
-                }
-
-                if (maxRotatedHeight > MAX_PREVIEW_HEIGHT) {
-                    maxRotatedHeight = MAX_PREVIEW_HEIGHT;
-                }
-
-                //mPreviewSize = choosePreviewOptimalSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight, maxRotatedWidth, maxRotatedHeight, largest);
                 mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight);
 
 
                 mImageSize = chooseOptimalSize(map.getOutputSizes(ImageFormat.JPEG),rotatedWidth,rotatedHeight);
-                mImageReader = ImageReader.newInstance(mImageSize.getWidth(),mImageSize.getHeight(),ImageFormat.JPEG,1);
-                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
+                mImageReader = ImageReader.newInstance(mImageSize.getWidth(),mImageSize.getHeight(),ImageFormat.JPEG,2);
+                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler); // inainte de
                 mCameraID = cameraID;
                 return;
             }
@@ -463,7 +440,7 @@ public class CameraActivity extends AppCompatActivity {
         try {
             mCaptureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             mCaptureRequestBuilder.addTarget(mImageReader.getSurface());
-                mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION,mTotalRotation);
+                mCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION,mTotalRotation-90);
 
 
 
@@ -511,10 +488,10 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private static int sensorToDeviceRotation(CameraCharacteristics cameraCharacteristics, int deviceOrientation){
-        int sensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+    private static int sensorToDeviceRotation(CameraCharacteristics cameraCharacteristics, int deviceOrientation) {
+        int sensorOrienatation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
         deviceOrientation = ORIENTATIONS.get(deviceOrientation);
-        return (sensorOrientation + deviceOrientation + 360)%360;
+        return (sensorOrienatation + deviceOrientation + 360) % 360;
     }
 
     private static Size chooseOptimalSize(Size[] choices, int width, int height){
@@ -584,6 +561,5 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }
