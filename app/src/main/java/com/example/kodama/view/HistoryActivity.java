@@ -1,14 +1,22 @@
 package com.example.kodama.view;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +37,10 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private List<PlantCard> plantList;
+    private ArrayList<String> plantListString = new ArrayList<>();
     private static final String PLANT_NAME = "plant_name";
+    private Dialog dialog;
+
 
 
     @Override
@@ -66,6 +77,7 @@ public class HistoryActivity extends AppCompatActivity {
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
+        ImageButton searchButton = (ImageButton) findViewById(R.id.search_button_bun);
 
         historyButton.bringToFront();
         helpButton.bringToFront();
@@ -99,12 +111,53 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+
         plantList = new ArrayList<>();
         preparePlantsList(sharedPreferences);
+        convertToStringArray(plantList);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerViewAdapter = new RecyclerViewAdapter(plantList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog = new Dialog(HistoryActivity.this);
+                                                dialog.setContentView(R.layout.dialog_searcheable_spinner);
+                                                dialog.getWindow().setLayout(850, 800);
+                                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                dialog.show();
+                                                ListView listView = dialog.findViewById(R.id.list_view);
+                                                EditText editText = dialog.findViewById(R.id.edit_text);
+                                                ArrayAdapter<String> adapter = new ArrayAdapter<>(HistoryActivity.this, android.R.layout.simple_list_item_1, plantListString);
+                                                editText.addTextChangedListener(new TextWatcher() {
+                                                    @Override
+                                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                        adapter.getFilter().filter(s);
+                                                    }
+
+                                                    @Override
+                                                    public void afterTextChanged(Editable s) {
+
+                                                    }
+                                                });
+                                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                        Intent sendNameIntent = new Intent(HistoryActivity.this, PlantPageActivity.class);
+                                                        sendNameIntent.putExtra(PLANT_NAME, adapter.getItem(position));
+                                                        startActivity(sendNameIntent);
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                            }
+                                        });
 
         recyclerViewAdapter.setOnItemClickListener(new ClickListener<PlantCard>(){
             @Override
@@ -115,6 +168,13 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    private void convertToStringArray(List<PlantCard> plantList) {
+        for(int i = 0; i < plantList.size(); i++ ){
+            plantListString.add(plantList.get(i).getName());
+            Log.e("moarte", plantListString.get(i));
+        }
     }
 
     public void onWindowFocusChanged(boolean hasFocus){
