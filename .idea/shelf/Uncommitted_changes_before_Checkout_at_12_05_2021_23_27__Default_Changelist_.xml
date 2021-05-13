@@ -1,0 +1,14 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_12_05_2021_23_27_[Default_Changelist]" date="1620851289159" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_05_2021_23_27_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 12.05.2021 23:27 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/bckplant.png" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_05_2021_23_27_[Default_Changelist]/bckplant.png" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" />
+    <option name="AFTER_PATH" value="app/src/main/res/drawable/plantbackgr.jpg" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_05_2021_23_27_[Default_Changelist]/plantbackgr.jpg" />
+  </binary>
+</changelist>
