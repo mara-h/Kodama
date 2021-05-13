@@ -29,6 +29,7 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private List<PlantCard> plantList;
+    private static final String PLANT_NAME = "plant_name";
 
 
     @Override
@@ -100,26 +101,22 @@ public class HistoryActivity extends AppCompatActivity {
 
         plantList = new ArrayList<>();
         preparePlantsList(sharedPreferences);
-        //plantList = storageArrayController.getStoredData(sharedPreferences);
-        for(int i = 0; i < plantList.size(); i++){
-            Log.e("name caca din history", plantList.get(i).getName());
-        }
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerViewAdapter = new RecyclerViewAdapter(plantList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-
         recyclerViewAdapter.setOnItemClickListener(new ClickListener<PlantCard>(){
             @Override
             public void onItemClick(PlantCard data) {
-                Toast.makeText(HistoryActivity.this, data.getName(), Toast.LENGTH_SHORT).show();
+                Intent sendNameIntent = new Intent(HistoryActivity.this, PlantPageActivity.class);
+                sendNameIntent.putExtra(PLANT_NAME, data.getName());
+                startActivity(sendNameIntent);
             }
         });
-
         recyclerView.setAdapter(recyclerViewAdapter);
-
     }
+
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
         View decorView = getWindow().getDecorView();
