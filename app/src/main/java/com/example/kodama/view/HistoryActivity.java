@@ -1,8 +1,11 @@
 package com.example.kodama.view;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kodama.R;
 import com.example.kodama.controllers.ClickListener;
 import com.example.kodama.controllers.RecyclerViewAdapter;
+import com.example.kodama.controllers.StorageArrayController;
 import com.example.kodama.models.PlantCard;
 
 import java.util.ArrayList;
@@ -21,9 +25,11 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
 
+    private StorageArrayController storageArrayController = new StorageArrayController();
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private List<PlantCard> plantList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class HistoryActivity extends AppCompatActivity {
                 });
         setContentView(R.layout.history);
 
+        SharedPreferences sharedPreferences = this.getSharedPreferences("PLANTS", Context.MODE_PRIVATE);
         ImageButton historyButton = (ImageButton) findViewById(R.id.historyButton);
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
@@ -92,7 +99,11 @@ public class HistoryActivity extends AppCompatActivity {
         });
 
         plantList = new ArrayList<>();
-        prepareMovie();
+        preparePlantsList(sharedPreferences);
+        //plantList = storageArrayController.getStoredData(sharedPreferences);
+        for(int i = 0; i < plantList.size(); i++){
+            Log.e("name caca din history", plantList.get(i).getName());
+        }
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerViewAdapter = new RecyclerViewAdapter(plantList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -123,13 +134,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
-    private void prepareMovie(){
-        PlantCard plant;
-        for(int i = 0; i<30; i++){
-            plant = new PlantCard("planta"+ i, R.drawable.leaves);
-            plantList.add(plant);
-        }
-       // recyclerViewAdapter.notifyDataSetChanged();
+    private void preparePlantsList(SharedPreferences sharedPreferences){
+        plantList = storageArrayController.getStoredData(sharedPreferences);
     }
-
 }

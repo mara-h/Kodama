@@ -3,7 +3,6 @@ package com.example.kodama.controllers;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -35,7 +34,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         final PlantCard plant = plantList.get(position);
 
         holder.title.setText(plant.getName());
-        holder.image.setBackgroundResource(plant.getImage());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,13 +56,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
-        private ImageView image;
         private CardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
-            image = itemView.findViewById(R.id.image);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
