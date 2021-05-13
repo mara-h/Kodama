@@ -6,17 +6,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bckplant"
     tools:context=".view.PlantPageActivity">
 
+    <ImageButton
+        android:id="@+id/plantBackButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/back"
+        android:scaleType="fitXY"
+        android:background="@drawable/custom_rounded_edges_square"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
     <TextView
-        android:id="@+id/plantName"
+        android:id="@+id/plantNamePage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ceva"
-        android:textSize="40dp"
+        android:layout_marginTop="120dp"
+        android:background="@null"
+        android:fadingEdgeLength="30dp"
+        android:requiresFadingEdge="vertical"
+        android:gravity="center"
+        android:text="Name"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/plantScientificNamePage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="ScientificName"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/plantNamePage"
+        app:layout_constraintTop_toTopOf="@id/plantNamePage" />
+
+    <TextView
+        android:id="@+id/plantDescriptionPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:scrollbars="vertical"
+        android:gravity="center"
+        android:text="Description"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/plantScientificNamePage"
+        app:layout_constraintTop_toTopOf="@id/plantScientificNamePage" />
+
+    <TextView
+        android:id="@+id/plantLinkPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="196dp"
+        android:padding="20dp"
+        android:text="Find out more here"
+        android:gravity="center"
+        android:textColor="@color/design_default_color_on_primary"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/plantDescriptionPage"
+        app:layout_constraintTop_toTopOf="@id/plantDescriptionPage"
+        app:layout_constraintVertical_bias="0.848" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

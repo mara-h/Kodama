@@ -1,0 +1,412 @@
+Index: app/src/main/java/com/example/kodama/view/PlantPageActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.kodama.view;\r\n\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.TextView;\r\n\r\nimport com.example.kodama.R;\r\nimport com.example.kodama.controllers.FirebaseCallback;\r\nimport com.example.kodama.controllers.PlantsController;\r\nimport com.example.kodama.models.Plants;\r\n\r\n\r\npublic class PlantPageActivity extends AppCompatActivity {\r\n\r\n    private String textToFind;\r\n    private static final String PLANT_NAME = \"plant_name\";\r\n    private String rename = \"moarte\";\r\n\r\n    private PlantsController plantsController = new PlantsController();\r\n\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n\r\n        TextView plantName = (TextView) findViewById(R.id.plantName);\r\n\r\n        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE\r\n                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION\r\n                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN\r\n                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\r\n                | View.SYSTEM_UI_FLAG_FULLSCREEN\r\n                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;\r\n\r\n        getWindow().getDecorView().setSystemUiVisibility(flags);\r\n        final View decorView = getWindow().getDecorView();\r\n        decorView\r\n                .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {\r\n\r\n                    @Override\r\n                    public void onSystemUiVisibilityChange(int visibility) {\r\n                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {\r\n                            decorView.setSystemUiVisibility(flags);\r\n                        }\r\n                    }\r\n                });\r\n        setContentView(R.layout.plant_page);\r\n\r\n        textToFind = getIntent().getStringExtra(PLANT_NAME);\r\n\r\n        plantsController.readData(textToFind, new FirebaseCallback() {\r\n            @Override\r\n            public void onCallback(Plants plant) {\r\n                Log.d(\"TAG\", plant.getName());\r\n            }\r\n        });\r\n    }\r\n\r\n    public void onWindowFocusChanged(boolean hasFocus) {\r\n        super.onWindowFocusChanged(hasFocus);\r\n        View decorView = getWindow().getDecorView();\r\n        if (hasFocus) {\r\n            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE\r\n                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY\r\n                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN\r\n                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\r\n                    | View.SYSTEM_UI_FLAG_FULLSCREEN\r\n                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/kodama/view/PlantPageActivity.java	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ app/src/main/java/com/example/kodama/view/PlantPageActivity.java	(date 1620896953427)
+@@ -4,12 +4,24 @@
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
++import android.graphics.Typeface;
+ import android.os.Bundle;
++import android.text.SpannableString;
++import android.text.Spanned;
++import android.text.TextPaint;
++import android.text.method.LinkMovementMethod;
++import android.text.method.ScrollingMovementMethod;
++import android.text.style.ClickableSpan;
++import android.text.style.StyleSpan;
++import android.text.style.UnderlineSpan;
+ import android.util.Log;
+ import android.view.View;
++import android.widget.Button;
++import android.widget.ImageButton;
+ import android.widget.TextView;
+ 
+ import com.example.kodama.R;
++//import com.example.kodama.controllers.FirebaseCallback;
+ import com.example.kodama.controllers.FirebaseCallback;
+ import com.example.kodama.controllers.PlantsController;
+ import com.example.kodama.models.Plants;
+@@ -29,6 +41,39 @@
+         super.onCreate(savedInstanceState);
+ 
+         TextView plantName = (TextView) findViewById(R.id.plantName);
++        TextView plantScientificName = (TextView) findViewById(R.id.plantScientificName);
++        TextView plantDescription = (TextView) findViewById(R.id.plantDescription);
++        TextView plantLink = (TextView) findViewById(R.id.plantLink);
++        ImageButton plantBackButton = (ImageButton) findViewById(R.id.plantBackButton);
++
++        String text = "Find out more here";
++        SpannableString ss = new SpannableString(text);
++        UnderlineSpan underlineSpan = new UnderlineSpan();
++        ClickableSpan clickableSpan = new ClickableSpan() {
++            @Override
++            public void updateDrawState(@NonNull TextPaint ds) {
++                super.updateDrawState(ds);
++                ds.setUnderlineText(true);
++            }
++
++            @Override
++            public void onClick(@NonNull View view) {
++
++            }
++        };
++        ss.setSpan(clickableSpan,14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
++        ss.setSpan(underlineSpan, 14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
++        plantLink.setText(ss);
++        plantLink.setMovementMethod(LinkMovementMethod.getInstance());
++
++        String para = "cevaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
++        plantDescription.setText(para);
++        plantDescription.setMovementMethod(new ScrollingMovementMethod());
++
++
++
++
++
+ 
+         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+Index: app/src/main/res/layout/plant_page.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n\r\n<androidx.constraintlayout.widget.ConstraintLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    tools:context=\".view.PlantPageActivity\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/plantName\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"36dp\"\r\n        android:text=\"Name\"\r\n        android:textSize=\"40dp\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/plant_page.xml	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ app/src/main/res/layout/plant_page.xml	(date 1620896830485)
+@@ -6,19 +6,74 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:background="@drawable/bckplant"
+     tools:context=".view.PlantPageActivity">
+ 
++    <ImageButton
++        android:id="@+id/plantBackButton"
++        android:layout_width="50dp"
++        android:layout_height="50dp"
++        android:layout_marginLeft="20dp"
++        android:layout_marginTop="40dp"
++        android:src="@drawable/back"
++        android:scaleType="fitXY"
++        android:background="@drawable/custom_rounded_edges_square"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        />
++
+     <TextView
+         android:id="@+id/plantName"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="36dp"
++        android:layout_marginTop="156dp"
++        android:background="@null"
+         android:text="Name"
+-        android:textSize="40dp"
++        android:textSize="30sp"
++        android:requiresFadingEdge="vertical"
++        android:fadingEdgeLength="30dp"
++        app:layout_constraintTop_toTopOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
++        />
++
+ 
++    <TextView
++        android:id="@+id/plantScientificName"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="100dp"
++        android:fontStyle="italic"
++        android:text="ScientificName"
++        android:textSize="30sp"
++        app:layout_constraintStart_toStartOf="@id/plantName"
++        app:layout_constraintTop_toTopOf="@id/plantName" />
+ 
++    <TextView
++        android:id="@+id/plantDescription"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="88dp"
++        android:scrollbars="vertical"
++
++        android:text="Description"
++        android:textSize="30sp"
++        app:layout_constraintStart_toStartOf="@id/plantScientificName"
++        app:layout_constraintTop_toTopOf="@id/plantScientificName" />
++
++    <TextView
++        android:id="@+id/plantLink"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="196dp"
++        android:padding="20dp"
++        android:text="Find out more here"
++        android:textAlignment="center"
++        android:textColor="@color/design_default_color_on_primary"
++        android:textSize="25sp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintStart_toStartOf="@id/plantDescription"
++        app:layout_constraintTop_toTopOf="@id/plantDescription"
++        app:layout_constraintVertical_bias="0.442" />
+ 
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/kodama/view/RetakePhotoActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.kodama.view;\r\n\r\nimport android.app.Activity;\r\nimport android.content.Intent;\r\nimport android.content.res.AssetFileDescriptor;\r\nimport android.database.Cursor;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.AnimatedVectorDrawable;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.ImageButton;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.example.kodama.R;\r\nimport com.example.kodama.controllers.PlantsController;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.installations.FirebaseInstallations;\r\n\r\nimport org.tensorflow.lite.DataType;\r\nimport org.tensorflow.lite.Interpreter;\r\nimport org.tensorflow.lite.support.common.FileUtil;\r\nimport org.tensorflow.lite.support.common.TensorOperator;\r\nimport org.tensorflow.lite.support.common.TensorProcessor;\r\nimport org.tensorflow.lite.support.common.ops.NormalizeOp;\r\nimport org.tensorflow.lite.support.image.ImageProcessor;\r\nimport org.tensorflow.lite.support.image.TensorImage;\r\nimport org.tensorflow.lite.support.image.ops.ResizeOp;\r\nimport org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;\r\nimport org.tensorflow.lite.support.label.TensorLabel;\r\nimport org.tensorflow.lite.support.tensorbuffer.TensorBuffer;\r\n\r\nimport java.io.File;\r\nimport java.io.FileInputStream;\r\nimport java.io.IOException;\r\nimport java.nio.MappedByteBuffer;\r\nimport java.nio.channels.FileChannel;\r\nimport java.util.Collections;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\n\r\npublic class RetakePhotoActivity extends Activity {\r\n\r\n    private static int RESULT_LOAD_IMAGE = 1;\r\n    private String picturePath;\r\n    private static final String IMAGE_FILE_LOCATION = \"image_file_location\";\r\n    protected Interpreter tflite;\r\n    private TensorImage inputImageBuffer;\r\n    private TensorBuffer outputProbabilityBuffer;\r\n    private TensorProcessor probabilityProcessor;\r\n    private static final float IMAGE_MEAN = 0.0f;\r\n    private static final float IMAGE_STD = 1.0f;\r\n    private static final float PROBABILITY_MEAN = 0.0f;\r\n    private static final float PROBABILITY_STD = 255.0f;\r\n    private Bitmap bitmap;\r\n    private List<String> labels;\r\n    private Uri imageuri;\r\n    private ImageView imageView;\r\n    private  int imageSizeX;\r\n    private  int imageSizeY;\r\n    private String userId;\r\n\r\n    private PlantsController plantsController = new PlantsController();\r\n\r\n    private AnimatedVectorDrawable animation;\r\n    private TextView classitext;\r\n\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE\r\n                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION\r\n                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN\r\n                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\r\n                | View.SYSTEM_UI_FLAG_FULLSCREEN\r\n                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;\r\n\r\n        getWindow().getDecorView().setSystemUiVisibility(flags);\r\n        final View decorView = getWindow().getDecorView();\r\n        decorView\r\n                .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()\r\n                {\r\n\r\n                    @Override\r\n                    public void onSystemUiVisibilityChange(int visibility)\r\n                    {\r\n                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)\r\n                        {\r\n                            decorView.setSystemUiVisibility(flags);\r\n                        }\r\n                    }\r\n                });\r\n        setContentView(R.layout.activity_retake_photo);\r\n        ImageButton retakeButton = (ImageButton) findViewById(R.id.btn_retakepicture);\r\n        ImageButton useButton = (ImageButton) findViewById(R.id.btn_usepicture);\r\n        ImageButton rechooseButton = (ImageButton) findViewById(R.id.btn_rechoose);\r\n        ImageButton cancelButton = (ImageButton) findViewById(R.id.btn_x);\r\n        ImageButton savePhoto = (ImageButton) findViewById(R.id.download_photo_button);\r\n        ImageButton gotoButton = (ImageButton) findViewById(R.id.goto_button);\r\n        ImageView savedPhoto =  (ImageView) findViewById(R.id.saved_photo_button);\r\n        ImageButton backButton = (ImageButton) findViewById(R.id.back_button);\r\n\r\n        classitext=(TextView)findViewById(R.id.classifytext);\r\n       // ImageButton useButton = (ImageButton) findViewById(R.id.useAnimated);\r\n     //   ImageView checkAnimation = (ImageView) findViewById(R.id.useAnimated) ;\r\n     //   Animatable animatable = (Animatable) checkAnimation.getDrawable();\r\n       // animatable.start();\r\n\r\n        imageView = findViewById(R.id.pictureViewRetake);\r\n\r\n        savedPhoto.setVisibility(View.GONE);\r\n        cancelButton.setVisibility(View.GONE);\r\n        classitext.setVisibility(View.GONE);\r\n\r\n\r\n        retakeButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                startActivity(new Intent(RetakePhotoActivity.this, CameraActivity.class));\r\n            }\r\n        });\r\n\r\n        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));\r\n\r\n        imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));\r\n        bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());\r\n\r\n        rechooseButton.setOnClickListener(new View.OnClickListener() {\r\n            public void onClick(View v) {\r\n\r\n                Intent i = new Intent(\r\n                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);\r\n                startActivityForResult(i, RESULT_LOAD_IMAGE);\r\n\r\n            }\r\n        });\r\n\r\n        try{\r\n            tflite=new Interpreter(loadmodelfile(this));\r\n        }catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n\r\n        FirebaseInstallations.getInstance().getId()\r\n                .addOnCompleteListener(new OnCompleteListener<String>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<String> task) {\r\n                        if (task.isSuccessful()) {\r\n                            userId = task.getResult();\r\n                            Log.d(\"Installations\", \"Installation ID: \" + task.getResult());\r\n                        } else {\r\n                            userId = \"eroare\";\r\n                            Log.e(\"Installations\", \"Unable to get Installation ID\");\r\n                        }\r\n                    }\r\n                });\r\n\r\n        useButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n\r\n                //get the shape of the model\r\n                int imageTensorIndex = 0;\r\n                int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}\r\n                imageSizeY = imageShape[1];\r\n                imageSizeX = imageShape[2];\r\n                DataType imageDataType = tflite.getInputTensor(imageTensorIndex).dataType();\r\n\r\n                int probabilityTensorIndex = 0;\r\n                int[] probabilityShape =\r\n                        tflite.getOutputTensor(probabilityTensorIndex).shape(); // {1, NUM_CLASSES}\r\n                DataType probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType();\r\n\r\n                inputImageBuffer = new TensorImage(imageDataType);\r\n                outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType);\r\n                probabilityProcessor = new TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build();\r\n\r\n                inputImageBuffer = loadImage(bitmap);\r\n\r\n                tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());\r\n                showresult();\r\n                //Drawable d = useButton.getDrawable();\r\n                //if (d instanceof AnimatedVectorDrawable) {\r\n                  //  animation = (AnimatedVectorDrawable) d;\r\n                //    animation.start();\r\n               // }\r\n                useButton.setVisibility(View.GONE);\r\n                cancelButton.setVisibility((View.VISIBLE));\r\n                classitext.setVisibility(View.VISIBLE);\r\n            }\r\n        });\r\n\r\n\r\n        cancelButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                startActivity(new Intent(RetakePhotoActivity.this, HomeActivity.class));\r\n            }\r\n        });\r\n\r\n        savePhoto.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                  Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);\r\n                  mediaStoreUpdateIntent.setData(Uri.fromFile(imageFile));\r\n                  sendBroadcast(mediaStoreUpdateIntent);\r\n                  savePhoto.setVisibility(View.GONE);\r\n                  savedPhoto.setVisibility(View.VISIBLE);\r\n\r\n\r\n            }\r\n        });\r\n\r\n\r\n        gotoButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                Toast.makeText(getApplicationContext(),\"nu stiu daca in history sau mai bine catre un google. sau transformam history in baza de date\", Toast.LENGTH_SHORT).show();\r\n                startActivity(new Intent(RetakePhotoActivity.this, HistoryActivity.class));\r\n\r\n            }\r\n        });\r\n\r\n        backButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                startActivity(new Intent(RetakePhotoActivity.this, HomeActivity.class));\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n\r\n    private TensorImage loadImage(final Bitmap bitmap) {\r\n        // Loads bitmap into a TensorImage.\r\n        inputImageBuffer.load(bitmap);\r\n\r\n        // Creates processor for the TensorImage.\r\n        int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());\r\n        //process image and resize it with required size\r\n        // TODO(b/143564309): Fuse ops inside ImageProcessor.\r\n        ImageProcessor imageProcessor =\r\n                new ImageProcessor.Builder()\r\n                        .add(new ResizeWithCropOrPadOp(cropSize, cropSize))\r\n                        .add(new ResizeOp(imageSizeX, imageSizeY, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))\r\n                        .add(getPreprocessNormalizeOp())\r\n                        .build();\r\n        return imageProcessor.process(inputImageBuffer);\r\n    }\r\n\r\n\r\n    private MappedByteBuffer loadmodelfile(Activity activity) throws IOException {\r\n        AssetFileDescriptor fileDescriptor=activity.getAssets().openFd(\"model.tflite\");\r\n        FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());\r\n        FileChannel fileChannel=inputStream.getChannel();\r\n        long startoffset = fileDescriptor.getStartOffset();\r\n        long declaredLength=fileDescriptor.getDeclaredLength();\r\n        return fileChannel.map(FileChannel.MapMode.READ_ONLY,startoffset,declaredLength);\r\n    }\r\n\r\n    private TensorOperator getPreprocessNormalizeOp() {\r\n        return new NormalizeOp(IMAGE_MEAN, IMAGE_STD);\r\n    }\r\n    private TensorOperator getPostprocessNormalizeOp(){\r\n        return new NormalizeOp(PROBABILITY_MEAN, PROBABILITY_STD);\r\n    }\r\n\r\n    private void showresult(){\r\n\r\n        try{\r\n            labels = FileUtil.loadLabels(this,\"dict.txt\");\r\n        }catch (Exception e){\r\n            e.printStackTrace();\r\n        }\r\n        Map<String, Float> labeledProbability =\r\n                new TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer))\r\n                        .getMapWithFloatValue();\r\n        float maxValueInMap =(Collections.max(labeledProbability.values()));\r\n\r\n        for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {\r\n            if (entry.getValue() == maxValueInMap) {\r\n                classitext.setText(entry.getKey());\r\n            }\r\n        }\r\n        tflite.close();\r\n        if (userId == \"eroare\") {\r\n            Toast.makeText(getApplicationContext(),\"Eroare la id firebase\", Toast.LENGTH_SHORT).show();\r\n        } else {\r\n            plantsController.addUserIdToFireBase(classitext.getText().toString(), userId, RetakePhotoActivity.this);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {\r\n            Uri selectedImage = data.getData();\r\n            String[] filePathColumn = { MediaStore.Images.Media.DATA };\r\n            Cursor cursor = getContentResolver().query(selectedImage,\r\n                    filePathColumn, null, null, null);\r\n            cursor.moveToFirst();\r\n            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);\r\n            picturePath = cursor.getString(columnIndex);\r\n            cursor.close();\r\n\r\n            Intent intent = new Intent(RetakePhotoActivity.this, RetakePhotoActivity.class);\r\n            intent.putExtra(IMAGE_FILE_LOCATION, picturePath);\r\n            startActivity(intent);\r\n        }\r\n    }\r\n\r\n    public void onWindowFocusChanged(boolean hasFocus){\r\n        super.onWindowFocusChanged(hasFocus);\r\n        View decorView = getWindow().getDecorView();\r\n        if(hasFocus){\r\n            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE\r\n                    |View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY\r\n                    |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN\r\n                    |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\r\n                    |View.SYSTEM_UI_FLAG_FULLSCREEN\r\n                    |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/kodama/view/RetakePhotoActivity.java	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ app/src/main/java/com/example/kodama/view/RetakePhotoActivity.java	(date 1620852501398)
+@@ -21,9 +21,6 @@
+ 
+ import com.example.kodama.R;
+ import com.example.kodama.controllers.PlantsController;
+-import com.google.android.gms.tasks.OnCompleteListener;
+-import com.google.android.gms.tasks.Task;
+-import com.google.firebase.installations.FirebaseInstallations;
+ 
+ import org.tensorflow.lite.DataType;
+ import org.tensorflow.lite.Interpreter;
+@@ -53,6 +50,7 @@
+     private static int RESULT_LOAD_IMAGE = 1;
+     private String picturePath;
+     private static final String IMAGE_FILE_LOCATION = "image_file_location";
++    private static final String PLANT_NAME = "plant_name";
+     protected Interpreter tflite;
+     private TensorImage inputImageBuffer;
+     private TensorBuffer outputProbabilityBuffer;
+@@ -63,11 +61,10 @@
+     private static final float PROBABILITY_STD = 255.0f;
+     private Bitmap bitmap;
+     private List<String> labels;
+-    private Uri imageuri;
+     private ImageView imageView;
+     private  int imageSizeX;
+     private  int imageSizeY;
+-    private String userId;
++
+ 
+     private PlantsController plantsController = new PlantsController();
+ 
+@@ -109,13 +106,10 @@
+         ImageButton backButton = (ImageButton) findViewById(R.id.back_button);
+ 
+         classitext=(TextView)findViewById(R.id.classifytext);
+-       // ImageButton useButton = (ImageButton) findViewById(R.id.useAnimated);
+-     //   ImageView checkAnimation = (ImageView) findViewById(R.id.useAnimated) ;
+-     //   Animatable animatable = (Animatable) checkAnimation.getDrawable();
+-       // animatable.start();
+ 
+         imageView = findViewById(R.id.pictureViewRetake);
+ 
++        gotoButton.setVisibility(View.GONE);
+         savedPhoto.setVisibility(View.GONE);
+         cancelButton.setVisibility(View.GONE);
+         classitext.setVisibility(View.GONE);
+@@ -149,20 +143,6 @@
+             e.printStackTrace();
+         }
+ 
+-        FirebaseInstallations.getInstance().getId()
+-                .addOnCompleteListener(new OnCompleteListener<String>() {
+-                    @Override
+-                    public void onComplete(@NonNull Task<String> task) {
+-                        if (task.isSuccessful()) {
+-                            userId = task.getResult();
+-                            Log.d("Installations", "Installation ID: " + task.getResult());
+-                        } else {
+-                            userId = "eroare";
+-                            Log.e("Installations", "Unable to get Installation ID");
+-                        }
+-                    }
+-                });
+-
+         useButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+@@ -187,14 +167,10 @@
+ 
+                 tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
+                 showresult();
+-                //Drawable d = useButton.getDrawable();
+-                //if (d instanceof AnimatedVectorDrawable) {
+-                  //  animation = (AnimatedVectorDrawable) d;
+-                //    animation.start();
+-               // }
+                 useButton.setVisibility(View.GONE);
+                 cancelButton.setVisibility((View.VISIBLE));
+                 classitext.setVisibility(View.VISIBLE);
++                gotoButton.setVisibility(View.VISIBLE);
+             }
+         });
+ 
+@@ -209,23 +185,20 @@
+         savePhoto.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+-                  Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+-                  mediaStoreUpdateIntent.setData(Uri.fromFile(imageFile));
+-                  sendBroadcast(mediaStoreUpdateIntent);
+-                  savePhoto.setVisibility(View.GONE);
+-                  savedPhoto.setVisibility(View.VISIBLE);
+-
+-
++                Intent mediaStoreUpdateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
++                mediaStoreUpdateIntent.setData(Uri.fromFile(imageFile));
++                sendBroadcast(mediaStoreUpdateIntent);
++                savePhoto.setVisibility(View.GONE);
++                savedPhoto.setVisibility(View.VISIBLE);
+             }
+         });
+-
+ 
+         gotoButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+-                Toast.makeText(getApplicationContext(),"nu stiu daca in history sau mai bine catre un google. sau transformam history in baza de date", Toast.LENGTH_SHORT).show();
+-                startActivity(new Intent(RetakePhotoActivity.this, HistoryActivity.class));
+-
++                Intent sendNameIntent = new Intent(RetakePhotoActivity.this, PlantPageActivity.class);
++                sendNameIntent.putExtra(PLANT_NAME, classitext.getText().toString());
++                startActivity(sendNameIntent);
+             }
+         });
+ 
+@@ -246,7 +219,6 @@
+         // Creates processor for the TensorImage.
+         int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
+         //process image and resize it with required size
+-        // TODO(b/143564309): Fuse ops inside ImageProcessor.
+         ImageProcessor imageProcessor =
+                 new ImageProcessor.Builder()
+                         .add(new ResizeWithCropOrPadOp(cropSize, cropSize))
+@@ -291,11 +263,6 @@
+             }
+         }
+         tflite.close();
+-        if (userId == "eroare") {
+-            Toast.makeText(getApplicationContext(),"Eroare la id firebase", Toast.LENGTH_SHORT).show();
+-        } else {
+-            plantsController.addUserIdToFireBase(classitext.getText().toString(), userId, RetakePhotoActivity.this);
+-        }
+     }
+ 
+     @Override
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"11\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ .idea/misc.xml	(date 1620891015827)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: app/src/main/java/com/example/kodama/models/Plants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.kodama.models;\r\n\r\npublic class Plants {\r\n\r\n    private String name;\r\n    private String description;\r\n    private String link;\r\n    private String scientificName;\r\n    private String userId;\r\n\r\n    public Plants() {}\r\n\r\n    public Plants (String name, String description, String link, String scientificName, String userId) {\r\n        this.name = name;\r\n        this.description = description;\r\n        this.link = link;\r\n        this.scientificName = scientificName;\r\n        this.userId = userId;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n    public String getDescription() {return description;}\r\n    public String getLink() {return link;}\r\n    public String getScientificName() {return scientificName;}\r\n    public String getUserId() {return userId;}\r\n\r\n    public void setUserId(String userId) {\r\n        this.userId = userId;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/kodama/models/Plants.java	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ app/src/main/java/com/example/kodama/models/Plants.java	(date 1620852721941)
+@@ -6,16 +6,15 @@
+     private String description;
+     private String link;
+     private String scientificName;
+-    private String userId;
+ 
+     public Plants() {}
+ 
+-    public Plants (String name, String description, String link, String scientificName, String userId) {
++    public Plants (String name, String description, String link, String scientificName) {
+         this.name = name;
+         this.description = description;
+         this.link = link;
+         this.scientificName = scientificName;
+-        this.userId = userId;
++
+     }
+ 
+     public String getName() {
+@@ -24,11 +23,22 @@
+     public String getDescription() {return description;}
+     public String getLink() {return link;}
+     public String getScientificName() {return scientificName;}
+-    public String getUserId() {return userId;}
++
++
++
++    public void setName(String name) {
++        this.name = name;
++    }
+ 
+-    public void setUserId(String userId) {
+-        this.userId = userId;
++    public void setDescription(String description) {
++        this.description = description;
+     }
+ 
++    public void setLink(String link) {
++        this.link = link;
++    }
+ 
++    public void setScientificName(String scientificName) {
++        this.scientificName = scientificName;
++    }
+ }
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\napply plugin: 'com.google.gms.google-services'\r\n\r\nandroid {\r\n    compileSdkVersion 30\r\n    buildToolsVersion \"30.0.3\"\r\n    aaptOptions {\r\n        noCompress \"tflite\"\r\n    }\r\n    defaultConfig {\r\n        applicationId \"com.example.kodama\"\r\n        minSdkVersion 21\r\n        targetSdkVersion 30\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n\r\n    }\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    buildFeatures {\r\n        mlModelBinding true\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility 1.8\r\n        targetCompatibility 1.8\r\n\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation \"androidx.cardview:cardview:1.0.0\"\r\n    implementation 'androidx.recyclerview:recyclerview:1.2.0'\r\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n    implementation 'androidx.appcompat:appcompat:1.2.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'\r\n    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'\r\n    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc2'\r\n    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'\r\n    implementation 'org.jetbrains:annotations:15.0'\r\n    implementation 'org.tensorflow:tensorflow-lite'\r\n    implementation 'com.google.android.material:material:1.3.0'\r\n    implementation 'androidx.navigation:navigation-fragment:2.3.5'\r\n    implementation 'androidx.navigation:navigation-ui:2.3.5'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test:runner:1.3.0'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'\r\n\r\n    implementation('org.tensorflow:tensorflow-lite:2.2.0') { changing = true }\r\n    implementation('org.tensorflow:tensorflow-lite-gpu:2.3.0') { changing = true }\r\n    implementation('org.tensorflow:tensorflow-lite-support:0.0.0-nightly') { changing = true }\r\n\r\n    implementation platform('com.google.firebase:firebase-bom:27.1.0')\r\n    implementation 'com.google.firebase:firebase-database:19.7.0'\r\n    implementation 'com.google.firebase:firebase-installations:16.3.5'\r\n\r\n\r\n}\r\n    apply plugin: 'com.google.gms.google-services'
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision c65cbfcfb31ee236a9ab1f1cbe808b864a34505a)
++++ app/build.gradle	(date 1620890989552)
+@@ -58,6 +58,8 @@
+     implementation 'com.google.firebase:firebase-database:19.7.0'
+     implementation 'com.google.firebase:firebase-installations:16.3.5'
+ 
++    implementation 'com.klinkerapps:link_builder:2.0.5'
++
+ 
+ }
+     apply plugin: 'com.google.gms.google-services'
+\ No newline at end of file
+Index: app/src/main/java/com/example/kodama/controllers/FirebaseCallback.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/kodama/controllers/FirebaseCallback.java	(date 1620852632674)
++++ app/src/main/java/com/example/kodama/controllers/FirebaseCallback.java	(date 1620852632674)
+@@ -0,0 +1,8 @@
++package com.example.kodama.controllers;
++
++import com.example.kodama.models.Plants;
++
++public interface FirebaseCallback {
++    void onCallback(Plants plant);
++
++}
