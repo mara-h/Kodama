@@ -59,6 +59,7 @@ import static java.util.Collections.min;
 public class CameraActivity extends AppCompatActivity {
 
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String IS_FROM_CAMERA = "is_from_camera";
     private int screenWidth;
     private int screenHeight;
 
@@ -144,6 +145,10 @@ public class CameraActivity extends AppCompatActivity {
             this.mImage = mImage;
         }
 
+
+        //TODO rotate image here
+
+
         @Override
         public void run() {
             ByteBuffer byteBuffer = mImage.getPlanes()[0].getBuffer();
@@ -160,6 +165,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 Intent viewPictureIntent = new Intent(CameraActivity.this, RetakePhotoActivity.class);
                 viewPictureIntent.putExtra(IMAGE_FILE_LOCATION,  mImageFileName);
+                viewPictureIntent.putExtra(IS_FROM_CAMERA, 1);
 
 
                 if(fileOutputStream != null){
@@ -358,28 +364,14 @@ public class CameraActivity extends AppCompatActivity {
                 int deviceOrientation = getWindowManager().getDefaultDisplay().getRotation();
                 mTotalRotation = sensorToDeviceRotation(cameraCharacteristics,deviceOrientation);
 
-
-                int maxRotatedWidth = screenWidth;
-                int maxRotatedHeight = screenHeight;
                 int rotatedWidth = width;
                 int rotatedHeight = height;
-
-
-                if (maxRotatedWidth > MAX_PREVIEW_WIDTH) {
-                    maxRotatedWidth = MAX_PREVIEW_WIDTH;
-                }
-
-                if (maxRotatedHeight > MAX_PREVIEW_HEIGHT) {
-                    maxRotatedHeight = MAX_PREVIEW_HEIGHT;
-                }
-
-                //mPreviewSize = choosePreviewOptimalSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight, maxRotatedWidth, maxRotatedHeight, largest);
                 mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), rotatedWidth, rotatedHeight);
 
 
                 mImageSize = chooseOptimalSize(map.getOutputSizes(ImageFormat.JPEG),rotatedWidth,rotatedHeight);
-                mImageReader = ImageReader.newInstance(mImageSize.getWidth(),mImageSize.getHeight(),ImageFormat.JPEG,1);
-                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
+                mImageReader = ImageReader.newInstance(mImageSize.getWidth(),mImageSize.getHeight(),ImageFormat.JPEG,2);
+                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler); // inainte de
                 mCameraID = cameraID;
                 return;
             }
@@ -569,6 +561,5 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }

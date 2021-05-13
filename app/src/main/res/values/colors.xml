@@ -10,7 +10,8 @@
     <color name="item_normal">#eeeeee</color>
     <color name="transparent_dark">#A6262f31</color>
     <color name="transparent_dark_lighter">#8A323C3E</color>
-    <color name="full_transparent">#00444444</color>
+    <color name="full_transparent">#DC282B29</color>
     <color name="primary_light_color">#D1D2D5</color>
+    <color name="black">#000000</color>
 
 </resources>

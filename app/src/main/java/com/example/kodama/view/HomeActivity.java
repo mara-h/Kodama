@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     Uri imageUri;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String IS_FROM_CAMERA = "is_from_camera";
     private String mImageFileName;
 
     ImageView imageView;
