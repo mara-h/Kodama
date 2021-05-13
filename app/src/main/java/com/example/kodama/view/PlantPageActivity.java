@@ -4,6 +4,9 @@ package com.example.kodama.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -69,10 +72,13 @@ public class PlantPageActivity extends AppCompatActivity {
                    @Override
                    public void onCallback(Plants plant) {
                        Log.d("TAG", plant.getName());
-                       plantName.setText("Plant name: "+ plant.getName());
-                       plantScientificName.setText("Scientific name: "+ plant.getScientificName());
+                       plantName.setText(plant.getName());
+                       plantName.setTypeface(null, Typeface.BOLD);
+                       plantScientificName.setText(plant.getScientificName());
+                       plantScientificName.setTypeface(null, Typeface.ITALIC);
                        plantDescription.setMovementMethod(new ScrollingMovementMethod());
-                       plantDescription.setText("Description: " + plant.getDescription());
+                       plantDescription.setText(plant.getDescription());
+                       String link = plant.getLink();
                        String text = "Find out more here";
                        SpannableString ss = new SpannableString(text);
                        UnderlineSpan underlineSpan = new UnderlineSpan();
@@ -85,6 +91,9 @@ public class PlantPageActivity extends AppCompatActivity {
 
                            @Override
                            public void onClick(@NonNull View view) {
+                               Uri uri = Uri.parse(link);
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(browserIntent);
 
                            }
                        };
@@ -95,36 +104,12 @@ public class PlantPageActivity extends AppCompatActivity {
 
                    }
                });
-               //rename = plant.getName();
-               //Log.e("plant get name log caca", plant.getName());
-            System.out.println("AICIIIIIIIII");
-
-          //System.out.println(plant.getName());
-        //  Toast.makeText(PlantPageActivity.this, rename, Toast.LENGTH_SHORT).show();
-
-        //plantName.setText(plant.getName());
-
-
-        String text = "Find out more here";
-//        SpannableString ss = new SpannableString(text);
-//        UnderlineSpan underlineSpan = new UnderlineSpan();
-//        ClickableSpan clickableSpan = new ClickableSpan() {
-//            @Override
-//            public void updateDrawState(@NonNull TextPaint ds) {
-//                super.updateDrawState(ds);
-//                ds.setUnderlineText(true);
-//            }
-//
-//            @Override
-//            public void onClick(@NonNull View view) {
-//
-//            }
-//        };
-//        ss.setSpan(clickableSpan,14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        ss.setSpan(underlineSpan, 14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        plantLink.setText(ss);
-//        plantLink.setMovementMethod(LinkMovementMethod.getInstance());
-
+            plantBackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PlantPageActivity.this, RetakePhotoActivity.class));
+                }
+            });
     }
 
     public void onWindowFocusChanged(boolean hasFocus){
