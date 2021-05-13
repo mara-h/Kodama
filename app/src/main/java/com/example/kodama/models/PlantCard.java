@@ -1,6 +1,8 @@
 package com.example.kodama.models;
 
-public class PlantCard {
+import java.io.Serializable;
+
+public class PlantCard implements Serializable {
 
     private String title;
     private int image;

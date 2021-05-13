@@ -37,6 +37,7 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -179,6 +180,12 @@ public class RetakePhotoActivity extends Activity {
                 cancelButton.setVisibility((View.VISIBLE));
                 classitext.setVisibility(View.VISIBLE);
                 gotoButton.setVisibility(View.VISIBLE);
+
+
+                if (plantList instanceof Serializable)
+                    Log.e("serializable plant list","ceva");
+                if (plant instanceof Serializable)
+                    Log.e("serializable plant", "altceva");
             }
         });
 

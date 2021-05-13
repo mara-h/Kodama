@@ -69,47 +69,47 @@ public class PlantPageActivity extends AppCompatActivity {
         textToFind = getIntent().getStringExtra(PLANT_NAME).toString();
 
         plantsController.readData(textToFind, new FirebaseCallback() {
-                   @Override
-                   public void onCallback(Plants plant) {
-                       Log.d("TAG", plant.getName());
-                       plantName.setText(plant.getName());
-                       plantName.setTypeface(null, Typeface.BOLD);
-                       plantScientificName.setText(plant.getScientificName());
-                       plantScientificName.setTypeface(null, Typeface.ITALIC);
-                       plantDescription.setMovementMethod(new ScrollingMovementMethod());
-                       plantDescription.setText(plant.getDescription());
-                       String link = plant.getLink();
-                       String text = "Find out more here";
-                       SpannableString ss = new SpannableString(text);
-                       UnderlineSpan underlineSpan = new UnderlineSpan();
-                       ClickableSpan clickableSpan = new ClickableSpan() {
-                           @Override
-                           public void updateDrawState(@NonNull TextPaint ds) {
-                               super.updateDrawState(ds);
-                               ds.setUnderlineText(true);
-                           }
+            @Override
+            public void onCallback(Plants plant) {
+                Log.d("TAG", plant.getName());
+                plantName.setText(plant.getName());
+                plantName.setTypeface(null, Typeface.BOLD);
+                plantScientificName.setText(plant.getScientificName());
+                plantScientificName.setTypeface(null, Typeface.ITALIC);
+                plantDescription.setMovementMethod(new ScrollingMovementMethod());
+                plantDescription.setText(plant.getDescription());
+                String link = plant.getLink();
+                String text = "Find out more here";
+                SpannableString ss = new SpannableString(text);
+                UnderlineSpan underlineSpan = new UnderlineSpan();
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void updateDrawState(@NonNull TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setUnderlineText(true);
+                    }
 
-                           @Override
-                           public void onClick(@NonNull View view) {
-                               Uri uri = Uri.parse(link);
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(browserIntent);
+                    @Override
+                    public void onClick(@NonNull View view) {
+                        Uri uri = Uri.parse(link);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(browserIntent);
 
-                           }
-                       };
-                       ss.setSpan(clickableSpan,14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                       ss.setSpan(underlineSpan, 14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                       plantLink.setText(ss);
-                       plantLink.setMovementMethod(LinkMovementMethod.getInstance());
+                    }
+                };
+                ss.setSpan(clickableSpan,14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(underlineSpan, 14, 18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                plantLink.setText(ss);
+                plantLink.setMovementMethod(LinkMovementMethod.getInstance());
 
-                   }
-               });
-            plantBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(PlantPageActivity.this, RetakePhotoActivity.class));
-                }
-            });
+            }
+        });
+        plantBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PlantPageActivity.this, RetakePhotoActivity.class));
+            }
+        });
     }
 
     public void onWindowFocusChanged(boolean hasFocus){
