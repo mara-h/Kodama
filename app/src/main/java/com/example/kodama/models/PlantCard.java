@@ -1,13 +1,14 @@
 package com.example.kodama.models;
 
-public class PlantCard {
+import java.io.Serializable;
+
+public class PlantCard implements Serializable {
 
     private String title;
     private int image;
 
-    public PlantCard(String title, int image) {
+    public PlantCard(String title) {
         this.title = title;
-        this.image = image;
     }
 
     public String getName() {

@@ -1,13 +1,14 @@
 package com.example.kodama.view;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -15,12 +16,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.kodama.R;
 import com.example.kodama.controllers.PlantsController;
+import com.example.kodama.controllers.StorageArrayController;
+import com.example.kodama.models.PlantCard;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -38,12 +40,13 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 
 public class RetakePhotoActivity extends Activity {
 
@@ -64,6 +67,8 @@ public class RetakePhotoActivity extends Activity {
     private ImageView imageView;
     private  int imageSizeX;
     private  int imageSizeY;
+    private StorageArrayController storageArrayController = new StorageArrayController();
+    private ArrayList<PlantCard> plantList;
 
 
     private PlantsController plantsController = new PlantsController();
@@ -96,6 +101,7 @@ public class RetakePhotoActivity extends Activity {
                     }
                 });
         setContentView(R.layout.activity_retake_photo);
+        SharedPreferences sharedPreferences = getSharedPreferences("PLANTS",MODE_PRIVATE);
         ImageButton retakeButton = (ImageButton) findViewById(R.id.btn_retakepicture);
         ImageButton useButton = (ImageButton) findViewById(R.id.btn_usepicture);
         ImageButton rechooseButton = (ImageButton) findViewById(R.id.btn_rechoose);
@@ -122,7 +128,7 @@ public class RetakePhotoActivity extends Activity {
             }
         });
 
-        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));
+        File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));// aici crapa din cand in cand; zice null pointer exception
 
         imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile.getAbsolutePath()));
         bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
@@ -144,6 +150,7 @@ public class RetakePhotoActivity extends Activity {
         }
 
         useButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
 
@@ -166,11 +173,23 @@ public class RetakePhotoActivity extends Activity {
                 inputImageBuffer = loadImage(bitmap);
 
                 tflite.run(inputImageBuffer.getBuffer(),outputProbabilityBuffer.getBuffer().rewind());
+                plantList = storageArrayController.getStoredData(sharedPreferences);
                 showresult();
+                PlantCard plant = new PlantCard(classitext.getText().toString());
+                storageArrayController.saveToStorage(sharedPreferences,plantList,plant);
+                for(int i = 0; i < plantList.size(); i++){
+                    Log.e("plant get name log caca", plantList.get(i).getName());
+                }
                 useButton.setVisibility(View.GONE);
                 cancelButton.setVisibility((View.VISIBLE));
                 classitext.setVisibility(View.VISIBLE);
                 gotoButton.setVisibility(View.VISIBLE);
+
+
+                if (plantList instanceof Serializable)
+                    Log.e("serializable plant list","ceva");
+                if (plant instanceof Serializable)
+                    Log.e("serializable plant", "altceva");
             }
         });
 
@@ -208,9 +227,7 @@ public class RetakePhotoActivity extends Activity {
                 startActivity(new Intent(RetakePhotoActivity.this, HomeActivity.class));
             }
         });
-
     }
-
 
     private TensorImage loadImage(final Bitmap bitmap) {
         // Loads bitmap into a TensorImage.
@@ -260,8 +277,10 @@ public class RetakePhotoActivity extends Activity {
         for (Map.Entry<String, Float> entry : labeledProbability.entrySet()) {
             if (entry.getValue() == maxValueInMap) {
                 classitext.setText(entry.getKey());
+
             }
         }
+
         tflite.close();
     }
 
