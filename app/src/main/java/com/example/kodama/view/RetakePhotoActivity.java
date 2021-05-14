@@ -140,7 +140,6 @@ public class RetakePhotoActivity extends Activity {
                 Intent i = new Intent(
                         Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
-
             }
         });
 
@@ -246,7 +245,6 @@ public class RetakePhotoActivity extends Activity {
         return imageProcessor.process(inputImageBuffer);
     }
 
-
     private MappedByteBuffer loadmodelfile(Activity activity) throws IOException {
         AssetFileDescriptor fileDescriptor=activity.getAssets().openFd("model.tflite");
         FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
@@ -281,7 +279,6 @@ public class RetakePhotoActivity extends Activity {
 
             }
         }
-
         tflite.close();
     }
 

@@ -107,7 +107,7 @@ public class PlantPageActivity extends AppCompatActivity {
         plantBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PlantPageActivity.this, RetakePhotoActivity.class));
+                startActivity(new Intent(PlantPageActivity.this, HistoryActivity.class));
             }
         });
     }
