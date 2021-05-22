@@ -52,6 +52,7 @@ public class RetakePhotoActivity extends Activity {
     private static int RESULT_LOAD_IMAGE = 1;
     private String picturePath;
     private static final String IMAGE_FILE_LOCATION = "image_file_location";
+    private static final String ACTIVITY_NAME = "activity_name";
     private static final String IS_FROM_CAMERA = "is_from_camera";
     private static final String PLANT_NAME = "plant_name";
     protected Interpreter tflite;
@@ -69,10 +70,12 @@ public class RetakePhotoActivity extends Activity {
     private  int imageSizeY;
     private StorageArrayController storageArrayController = new StorageArrayController();
     private ArrayList<PlantCard> plantList;
+    private String mImageFileName;
 
 
     private PlantsController plantsController = new PlantsController();
     private TextView classitext;
+    private boolean fromRetake = true;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +130,7 @@ public class RetakePhotoActivity extends Activity {
         });
 
         File imageFile = new File(getIntent().getStringExtra(IMAGE_FILE_LOCATION));// aici crapa din cand in cand; zice null pointer exception
+        mImageFileName = imageFile.getAbsolutePath();
         int is_from_camera = getIntent().getIntExtra(IS_FROM_CAMERA, 0);
         if(is_from_camera == 1){
             imageView.setRotation((float)90.0);
@@ -178,9 +182,6 @@ public class RetakePhotoActivity extends Activity {
                 showresult();
                 PlantCard plant = new PlantCard(classitext.getText().toString());
                 storageArrayController.saveToStorage(sharedPreferences,plantList,plant);
-                for(int i = 0; i < plantList.size(); i++){
-                    Log.e("plant get name log caca", plantList.get(i).getName());
-                }
                 useButton.setVisibility(View.GONE);
                 cancelButton.setVisibility((View.VISIBLE));
                 classitext.setVisibility(View.VISIBLE);
@@ -218,6 +219,8 @@ public class RetakePhotoActivity extends Activity {
             public void onClick(View v) {
                 Intent sendNameIntent = new Intent(RetakePhotoActivity.this, PlantPageActivity.class);
                 sendNameIntent.putExtra(PLANT_NAME, classitext.getText().toString());
+                sendNameIntent.putExtra(IMAGE_FILE_LOCATION, mImageFileName);
+                sendNameIntent.putExtra(ACTIVITY_NAME, fromRetake);
                 startActivity(sendNameIntent);
             }
         });

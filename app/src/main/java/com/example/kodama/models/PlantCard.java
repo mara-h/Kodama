@@ -1,8 +1,10 @@
 package com.example.kodama.models;
 
+import com.example.kodama.controllers.Searcheable;
+
 import java.io.Serializable;
 
-public class PlantCard implements Serializable {
+public class PlantCard implements Serializable, Searcheable {
 
     private String title;
     private int image;

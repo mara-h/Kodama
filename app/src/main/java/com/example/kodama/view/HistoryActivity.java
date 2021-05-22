@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,10 +41,12 @@ public class HistoryActivity extends AppCompatActivity {
     private List<PlantCard> plantList;
     private ArrayList<String> plantListString = new ArrayList<>();
     private static final String PLANT_NAME = "plant_name";
+    private static final String ACTIVITY_NAME = "activity_name";
     private Dialog dialog;
+    private boolean fromRetake = false;
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -152,6 +156,7 @@ public class HistoryActivity extends AppCompatActivity {
                                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                         Intent sendNameIntent = new Intent(HistoryActivity.this, PlantPageActivity.class);
                                                         sendNameIntent.putExtra(PLANT_NAME, adapter.getItem(position));
+                                                        sendNameIntent.putExtra(ACTIVITY_NAME, fromRetake);
                                                         startActivity(sendNameIntent);
                                                         dialog.dismiss();
                                                     }
@@ -191,7 +196,13 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void preparePlantsList(SharedPreferences sharedPreferences){
         plantList = storageArrayController.getStoredData(sharedPreferences);
+        List<PlantCard> plantListA;
+       // plantListA = storageArrayController.getStoredDataBySearch(plantList, "rose");
+       // plantListA = storageArrayController.getStoredDataBySearch(plantList, "t");
     }
+
+
 }
