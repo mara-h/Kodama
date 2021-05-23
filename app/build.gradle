@@ -59,5 +59,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-installations:16.3.5'
     implementation 'com.github.mirrajabi:search-dialog:1.2.4'
 
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.7.7'
 }
     apply plugin: 'com.google.gms.google-services'
