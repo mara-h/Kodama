@@ -59,17 +59,9 @@
             android:src="@drawable/myplants"
             android:id="@+id/myplants"
             app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="1dp"/>
-    <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-        android:scaleType="fitXY"
-            android:src="@drawable/search"
-            android:background="@null"
-            app:layout_constraintStart_toEndOf="@id/myplants"
-            app:layout_constraintTop_toTopOf="@+id/myplants"
-            app:layout_constraintBottom_toBottomOf="@+id/myplants" app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

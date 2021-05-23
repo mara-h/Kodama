@@ -3,6 +3,8 @@ package com.example.kodama.controllers;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -13,7 +15,7 @@ import com.example.kodama.models.PlantCard;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>{
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements Filterable {
 
     private List<PlantCard> plantList;
     private ClickListener<PlantCard> clickListener;
@@ -53,6 +55,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.clickListener = plantClickListener;
     }
 
+    @Override
+    public Filter getFilter() {
+        return null;
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
@@ -64,4 +71,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
+
 }

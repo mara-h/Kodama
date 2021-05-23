@@ -4,12 +4,12 @@ package com.example.kodama.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,17 +21,18 @@ import com.example.kodama.controllers.StorageArrayController;
 import com.example.kodama.models.PlantCard;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
 
     private StorageArrayController storageArrayController = new StorageArrayController();
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
-    private List<PlantCard> plantList;
+    private ArrayList<PlantCard> plantList;
     private static final String PLANT_NAME = "plant_name";
+    private boolean fromRetake = false;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,7 +67,6 @@ public class HistoryActivity extends AppCompatActivity {
         ImageButton helpButton = (ImageButton) findViewById(R.id.helpButton);
         ImageButton aboutUsButton = (ImageButton) findViewById(R.id.aboutUsButton);
         ImageButton homeButton = (ImageButton) findViewById(R.id.homeButton);
-
         historyButton.bringToFront();
         helpButton.bringToFront();
         aboutUsButton.bringToFront();
@@ -99,12 +99,14 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+
         plantList = new ArrayList<>();
         preparePlantsList(sharedPreferences);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerViewAdapter = new RecyclerViewAdapter(plantList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
 
         recyclerViewAdapter.setOnItemClickListener(new ClickListener<PlantCard>(){
             @Override
@@ -131,7 +133,10 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void preparePlantsList(SharedPreferences sharedPreferences){
         plantList = storageArrayController.getStoredData(sharedPreferences);
     }
+
+
 }

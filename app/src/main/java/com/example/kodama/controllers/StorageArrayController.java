@@ -2,16 +2,13 @@ package com.example.kodama.controllers;
 
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.example.kodama.models.PlantCard;
-import com.example.kodama.models.Plants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class StorageArrayController {
@@ -46,5 +43,4 @@ public class StorageArrayController {
 
         return storedData;
     }
-
 }

@@ -13,5 +13,6 @@
     <color name="full_transparent">#DC282B29</color>
     <color name="primary_light_color">#D1D2D5</color>
     <color name="black">#000000</color>
-
+    <color name="searchDialogResultColor">#2C5648</color>
+    <color name="searchDialogResultHighlightColor">#2C5648</color>
 </resources>

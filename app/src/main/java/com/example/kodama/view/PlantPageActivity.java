@@ -1,9 +1,6 @@
 package com.example.kodama.view;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -20,6 +17,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.kodama.R;
 import com.example.kodama.controllers.FirebaseCallback;
 import com.example.kodama.controllers.PlantsController;
@@ -31,8 +31,12 @@ public class PlantPageActivity extends AppCompatActivity {
 
     private String textToFind;
     private static final String PLANT_NAME = "plant_name";
+    private static final String ACTIVITY_NAME = "activity_name";
+    private static final String IMAGE_FILE_LOCATION = "image_file_location";
     private String rename = "moarte";
+    private String mImageFileName;
     TextView plantLink;
+    private boolean fromRetake;
     private PlantsController plantsController = new PlantsController();
 
 
@@ -66,7 +70,9 @@ public class PlantPageActivity extends AppCompatActivity {
         plantLink = (TextView) findViewById(R.id.plantLinkPage);
         ImageButton plantBackButton = (ImageButton) findViewById(R.id.plantBackButton);
 
-        textToFind = getIntent().getStringExtra(PLANT_NAME).toString();
+        textToFind = getIntent().getStringExtra(PLANT_NAME);
+        mImageFileName = getIntent().getStringExtra(IMAGE_FILE_LOCATION);
+        fromRetake = getIntent().getBooleanExtra(ACTIVITY_NAME, false);
 
         plantsController.readData(textToFind, new FirebaseCallback() {
             @Override
@@ -107,7 +113,14 @@ public class PlantPageActivity extends AppCompatActivity {
         plantBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PlantPageActivity.this, RetakePhotoActivity.class));
+                if(fromRetake){
+                    Intent intent = new Intent(PlantPageActivity.this, RetakePhotoActivity.class);
+                    intent.putExtra(IMAGE_FILE_LOCATION ,mImageFileName);
+                    startActivity(intent);
+                }
+                else {
+                    startActivity(new Intent(PlantPageActivity.this, HistoryActivity.class));
+                }
             }
         });
     }
