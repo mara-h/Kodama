@@ -9,7 +9,6 @@ import com.example.kodama.models.PlantCard;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class StorageArrayController {
@@ -43,12 +42,5 @@ public class StorageArrayController {
         }
 
         return storedData;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public ArrayList<PlantCard> getStoredDataBySearch(List<PlantCard> storedData, String searchedString) {
-        ArrayList<PlantCard> plantListSearched = new ArrayList<>();
-
-        return plantListSearched;
     }
 }
